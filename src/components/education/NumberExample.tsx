@@ -1,5 +1,3 @@
-"use client";
-
 type NumberExampleLine = {
   label: string;
   value: string;
@@ -7,41 +5,36 @@ type NumberExampleLine = {
 };
 
 type NumberExampleProps = {
-  title: string;
+  heading: string;
   lines: NumberExampleLine[];
+  footnote?: string;
 };
 
-export function NumberExample({ title, lines }: NumberExampleProps) {
+export function NumberExample({ heading, lines, footnote }: NumberExampleProps) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4 mb-4 shadow-sm">
-      <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
-        {title}
-      </h3>
-      <div className="divide-y divide-gray-100">
-        {lines.map((line, idx) => (
+    <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+      <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 mb-2">
+        Example
+      </p>
+      <p className="text-sm font-medium text-amber-900 mb-3">{heading}</p>
+      <div className="space-y-1">
+        {lines.map((line, i) => (
           <div
-            key={idx}
-            className={`flex items-center justify-between py-2 ${
-              line.highlight ? "bg-amber-50 -mx-4 px-4" : ""
+            key={i}
+            className={`flex items-center justify-between gap-4 rounded px-2 py-1 text-sm ${
+              line.highlight
+                ? "bg-amber-200 font-semibold text-amber-900"
+                : "text-amber-800"
             }`}
           >
-            <span
-              className={`text-sm ${
-                line.highlight ? "text-amber-800 font-medium" : "text-gray-600"
-              }`}
-            >
-              {line.label}
-            </span>
-            <span
-              className={`text-sm font-semibold ${
-                line.highlight ? "text-amber-700" : "text-gray-800"
-              }`}
-            >
-              {line.value}
-            </span>
+            <span>{line.label}</span>
+            <span className="font-mono tabular-nums">{line.value}</span>
           </div>
         ))}
       </div>
+      {footnote && (
+        <p className="mt-2 text-xs text-amber-700 leading-relaxed">{footnote}</p>
+      )}
     </div>
   );
 }

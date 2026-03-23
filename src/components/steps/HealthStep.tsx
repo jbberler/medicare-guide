@@ -28,14 +28,14 @@ const MEDICATIONS_LEVEL_LABELS: Record<MedicationsLevel, string> = {
 
 const COMPARISON_ROWS = [
   {
-    label: "Doctor access",
-    a: "Any Medicare-accepting doctor nationwide",
-    b: "Plan network only",
+    dimension: "Doctor access",
+    optionA: "Any Medicare-accepting doctor nationwide",
+    optionB: "Plan network only",
   },
   {
-    label: "Cost predictability",
-    a: "Varies (Medigap fills gaps)",
-    b: "Fixed copays, OOP cap",
+    dimension: "Cost predictability",
+    optionA: "Varies (Medigap fills gaps)",
+    optionB: "Fixed copays, OOP cap",
   },
 ];
 
@@ -83,7 +83,8 @@ export function HealthStep() {
   return (
     <div className="space-y-6">
       <ComparisonSnippet
-        headers={["Original Medicare", "Medicare Advantage"]}
+        labelA="Original Medicare"
+        labelB="Medicare Advantage"
         rows={COMPARISON_ROWS}
       />
 
@@ -218,7 +219,7 @@ export function HealthStep() {
           variant="primary"
           onClick={handleContinue}
           disabled={!canContinue}
-          debounce
+          debounce={300}
         >
           Continue
         </Button>

@@ -95,7 +95,7 @@ export function IncomeStep() {
           <Button variant="ghost" onClick={() => setShowRedirectInterstitial(false)}>
             Back
           </Button>
-          <Button variant="primary" onClick={commitAndAdvance} debounce>
+          <Button variant="primary" onClick={commitAndAdvance} debounce={300}>
             Continue anyway →
           </Button>
         </div>
@@ -106,7 +106,7 @@ export function IncomeStep() {
   return (
     <div className="space-y-6">
       <NumberExample
-        title="How IRMAA affects your Medicare premiums"
+        heading="How IRMAA affects your Medicare premiums"
         lines={NUMBER_EXAMPLE_LINES}
       />
 
@@ -119,10 +119,8 @@ export function IncomeStep() {
         <Select
           id="irmaa_bracket"
           label="What is your approximate household income bracket? (2023 tax year)"
-          options={[
-            { value: "", label: "Select your income bracket…" },
-            ...IRMAA_BRACKET_OPTIONS,
-          ]}
+          placeholder="Select your income bracket…"
+          options={IRMAA_BRACKET_OPTIONS}
           value={irmaaBracket}
           onChange={(e) => {
             setIrmaaBracket(e.target.value);
@@ -178,7 +176,7 @@ export function IncomeStep() {
           variant="primary"
           onClick={handleContinue}
           disabled={!canContinue}
-          debounce
+          debounce={300}
         >
           Continue
         </Button>

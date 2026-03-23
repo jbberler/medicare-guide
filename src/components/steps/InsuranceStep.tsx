@@ -152,10 +152,8 @@ export function InsuranceStep() {
             <Select
               id="employer_holder"
               label="Who holds the employer coverage?"
-              options={[
-                { value: "", label: "Select…" },
-                ...EMPLOYER_HOLDER_OPTIONS,
-              ]}
+              placeholder="Select…"
+              options={EMPLOYER_HOLDER_OPTIONS}
               value={employerHolder}
               onChange={(e) => {
                 setEmployerHolder(e.target.value);
@@ -224,7 +222,7 @@ export function InsuranceStep() {
           variant="primary"
           onClick={handleContinue}
           disabled={!canContinue}
-          debounce
+          debounce={300}
         >
           Continue
         </Button>

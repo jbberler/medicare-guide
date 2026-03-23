@@ -104,7 +104,7 @@ export function HouseholdStep() {
           <Button variant="ghost" onClick={() => goToStep(1)}>
             Exit
           </Button>
-          <Button variant="primary" onClick={handleAgeGateContinue} debounce>
+          <Button variant="primary" onClick={handleAgeGateContinue} debounce={300}>
             Continue exploring
           </Button>
         </div>
@@ -221,10 +221,8 @@ export function HouseholdStep() {
         <Select
           id="state"
           label="State of residence"
-          options={[
-            { value: "", label: "Select a state…" },
-            ...STATE_SELECT_OPTIONS,
-          ]}
+          placeholder="Select a state…"
+          options={STATE_SELECT_OPTIONS}
           value={selectedState}
           onChange={(e) => {
             setSelectedState(e.target.value);
@@ -278,7 +276,7 @@ export function HouseholdStep() {
           variant="primary"
           onClick={handleContinue}
           disabled={!canContinue}
-          debounce
+          debounce={300}
         >
           Continue
         </Button>

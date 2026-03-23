@@ -9,13 +9,13 @@ import { Input } from "@/components/ui/Input";
 const VALIDATION_MSG =
   "We need this to calculate your options — it stays in your browser.";
 
-const TIMELINE_EVENTS = [
-  { date: "Month 0", label: "Coverage ends" },
-  { date: "Month 1–8", label: "Special Enrollment Period — enroll in Part B" },
+const TIMELINE_MILESTONES = [
+  { label: "Month 0", description: "Coverage ends" },
+  { label: "Month 1–8", description: "Special Enrollment Period — enroll in Part B" },
   {
-    date: "Month 9+",
-    label: "Late enrollment penalty begins",
-    risk: true,
+    label: "Month 9+",
+    description: "Late enrollment penalty begins",
+    isWarning: true,
   },
 ];
 
@@ -70,7 +70,11 @@ export function TimelineStep() {
         <h2 className="text-base font-semibold text-gray-800 mb-2">
           Understanding your enrollment window
         </h2>
-        <DeadlineStrip events={TIMELINE_EVENTS} />
+        <DeadlineStrip
+          heading="Your Part B enrollment window after employer coverage ends"
+          milestones={TIMELINE_MILESTONES}
+          warningNote="Missing the 8-month SEP means a permanent 10% penalty per year of delay."
+        />
         <p className="text-xs text-gray-500 mt-1">
           The Special Enrollment Period (SEP) starts when employer coverage
           ends. Missing it means a permanent 10% penalty per year delayed.
@@ -147,7 +151,7 @@ export function TimelineStep() {
           variant="primary"
           onClick={handleContinue}
           disabled={!canContinue}
-          debounce
+          debounce={300}
         >
           Continue
         </Button>

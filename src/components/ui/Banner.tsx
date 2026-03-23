@@ -1,56 +1,54 @@
-"use client";
+export type BannerVariant = "info" | "warning" | "error";
 
-import { type ReactNode } from "react";
-
-type BannerVariant = "info" | "warning" | "error";
-
-type BannerProps = {
-  variant: BannerVariant;
-  children: ReactNode;
+export interface BannerProps {
+  variant?: BannerVariant;
+  children: React.ReactNode;
   onDismiss?: () => void;
-};
+  className?: string;
+}
 
-const variantStyles: Record<
+const VARIANT_STYLES: Record<
   BannerVariant,
-  { container: string; icon: string; dismiss: string }
+  { wrapper: string; iconChar: string }
 > = {
   info: {
-    container: "bg-blue-50 border-blue-200 text-blue-800",
-    icon: "ℹ️",
-    dismiss: "text-blue-600 hover:text-blue-800",
+    wrapper: "bg-blue-50 border-blue-300 text-blue-800",
+    iconChar: "ℹ",
   },
   warning: {
-    container: "bg-yellow-50 border-yellow-200 text-yellow-800",
-    icon: "⚠️",
-    dismiss: "text-yellow-700 hover:text-yellow-900",
+    wrapper: "bg-yellow-50 border-yellow-400 text-yellow-900",
+    iconChar: "⚠",
   },
   error: {
-    container: "bg-red-50 border-red-200 text-red-800",
-    icon: "✕",
-    dismiss: "text-red-600 hover:text-red-800",
+    wrapper: "bg-red-50 border-red-400 text-red-800",
+    iconChar: "✕",
   },
 };
 
-export function Banner({ variant, children, onDismiss }: BannerProps) {
-  const styles = variantStyles[variant];
+export function Banner({
+  variant = "info",
+  children,
+  onDismiss,
+  className = "",
+}: BannerProps) {
+  const { wrapper, iconChar } = VARIANT_STYLES[variant];
 
   return (
     <div
-      role={variant === "error" ? "alert" : "status"}
-      className={`flex items-start gap-3 rounded-lg border px-4 py-3 text-sm ${styles.container}`}
+      role="status"
+      className={`flex items-start gap-3 rounded-md border px-4 py-3 text-sm leading-snug ${wrapper} ${className}`}
     >
-      <span aria-hidden="true" className="shrink-0 mt-0.5">
-        {styles.icon}
+      <span className="mt-0.5 shrink-0 font-bold" aria-hidden="true">
+        {iconChar}
       </span>
       <div className="flex-1">{children}</div>
       {onDismiss && (
         <button
-          type="button"
           onClick={onDismiss}
+          className="ml-2 shrink-0 rounded p-1 hover:opacity-70 focus-visible:outline-2 focus-visible:outline-current"
           aria-label="Dismiss"
-          className={`shrink-0 ml-2 text-lg leading-none focus:outline-none ${styles.dismiss}`}
         >
-          ×
+          ✕
         </button>
       )}
     </div>

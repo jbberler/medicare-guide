@@ -11,21 +11,26 @@ export function RuleSummary({ rule, whyItMatters }: RuleSummaryProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 mb-4">
-      <p className="font-semibold text-gray-900">{rule}</p>
-      <button
-        type="button"
-        onClick={() => setExpanded((prev) => !prev)}
-        className="mt-2 text-sm text-blue-700 hover:text-blue-900 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 rounded"
-        aria-expanded={expanded}
-      >
-        Why this matters {expanded ? "▲" : "▼"}
-      </button>
-      {expanded && (
-        <p className="mt-2 text-sm text-gray-700 leading-relaxed">
-          {whyItMatters}
-        </p>
-      )}
+    <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3">
+      <div className="flex items-start gap-3">
+        <span className="mt-0.5 text-blue-600 text-lg leading-none select-none" aria-hidden="true">
+          ℹ
+        </span>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-blue-900">{rule}</p>
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="mt-1 text-xs font-medium text-blue-700 hover:text-blue-900 underline underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+            aria-expanded={expanded}
+          >
+            {expanded ? "Hide explanation" : "Why this matters"}
+          </button>
+          {expanded && (
+            <p className="mt-2 text-sm text-blue-800 leading-relaxed">{whyItMatters}</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

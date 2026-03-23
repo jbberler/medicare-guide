@@ -1,66 +1,61 @@
 "use client";
 
-import { type ReactNode, useRef, useCallback } from "react";
+import { useRef, useCallback } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
+export type ButtonVariant = "primary" | "secondary" | "ghost";
 
-type ButtonProps = {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
-  disabled?: boolean;
-  debounce?: boolean;
-  onClick?: () => void;
-  children: ReactNode;
-  type?: "button" | "submit";
-  className?: string;
-};
-
-const variantClasses: Record<ButtonVariant, string> = {
-  primary:
-    "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 border border-transparent",
-  secondary:
-    "bg-white text-indigo-600 hover:bg-indigo-50 active:bg-indigo-100 border border-indigo-600",
-  ghost:
-    "bg-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100 active:bg-gray-200 border border-transparent",
-};
+  /** Prevent re-clicks within this window (ms). Useful for nav buttons. */
+  debounce?: number;
+}
 
 export function Button({
   variant = "primary",
-  disabled = false,
-  debounce: useDebounce = false,
+  debounce: debounceProp,
   onClick,
-  children,
-  type = "button",
+  disabled,
   className = "",
+  children,
+  ...rest
 }: ButtonProps) {
-  const cooldownRef = useRef(false);
+  const pendingRef = useRef(false);
 
-  const handleClick = useCallback(() => {
-    if (disabled) return;
-    if (useDebounce && cooldownRef.current) return;
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!onClick) return;
+      if (debounceProp !== undefined) {
+        if (pendingRef.current) return;
+        pendingRef.current = true;
+        setTimeout(() => {
+          pendingRef.current = false;
+        }, debounceProp);
+      }
+      onClick(e);
+    },
+    [onClick, debounceProp]
+  );
 
-    if (useDebounce) {
-      cooldownRef.current = true;
-      setTimeout(() => {
-        cooldownRef.current = false;
-      }, 300);
-    }
+  const base =
+    "inline-flex items-center justify-center rounded-md text-base font-medium " +
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 " +
+    "transition-colors min-h-[44px] px-5 py-2.5 cursor-pointer select-none " +
+    "disabled:cursor-not-allowed disabled:opacity-50";
 
-    onClick?.();
-  }, [disabled, useDebounce, onClick]);
+  const variants: Record<ButtonVariant, string> = {
+    primary: "bg-blue-700 text-white hover:bg-blue-800 active:bg-blue-900",
+    secondary:
+      "border border-gray-300 bg-white text-gray-800 hover:bg-gray-50 active:bg-gray-100",
+    ghost: "bg-transparent text-blue-700 hover:bg-blue-50 active:bg-blue-100",
+  };
 
   return (
     <button
-      type={type}
+      {...rest}
       disabled={disabled}
       onClick={handleClick}
-      className={[
-        "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
-        variantClasses[variant],
-        disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : "cursor-pointer",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={`${base} ${variants[variant]} ${className}`}
     >
       {children}
     </button>
