@@ -1,0 +1,40 @@
+{
+  "brackets": [
+    {
+      "id": "base",
+      "label": "$0 – $103,000 (single) / $0 – $206,000 (married)",
+      "partBMonthly": 185.00,
+      "partDMonthly": 0.00
+    },
+    {
+      "id": "tier1",
+      "label": "$103,001 – $129,000 (single) / $206,001 – $258,000 (married)",
+      "partBMonthly": 259.00,
+      "partDMonthly": 13.70
+    },
+    {
+      "id": "tier2",
+      "label": "$129,001 – $161,000 (single) / $258,001 – $322,000 (married)",
+      "partBMonthly": 370.00,
+      "partDMonthly": 35.30
+    },
+    {
+      "id": "tier3",
+      "label": "$161,001 – $193,000 (single) / $322,001 – $386,000 (married)",
+      "partBMonthly": 480.90,
+      "partDMonthly": 57.00
+    },
+    {
+      "id": "tier4",
+      "label": "$193,001 – $500,000 (single) / $386,001 – $750,000 (married)",
+      "partBMonthly": 591.90,
+      "partDMonthly": 78.60
+    },
+    {
+      "id": "tier5",
+      "label": "Above $500,000 (single) / Above $750,000 (married)",
+      "partBMonthly": 628.90,
+      "partDMonthly": 85.80
+    }
+  ]
+}

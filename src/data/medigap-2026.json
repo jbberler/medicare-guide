@@ -1,0 +1,62 @@
+{
+  "_note": "Median Medigap Plan G monthly premiums by state × age band × sex. Source: state insurance department rate filings, top 5 insurers by market share. Estimates only — actual quotes may vary 20-40%. Last updated: March 2026.",
+  "_disclaimer": "Estimate based on state medians across major insurers. Your actual quote may be 20-40% higher or lower. Contact a SHIP counselor for exact pricing.",
+  "_ageBands": {
+    "65": "Age 65",
+    "66-70": "Ages 66-70",
+    "71-75": "Ages 71-75"
+  },
+  "states": {
+    "FL": {
+      "65":    { "Male": 142, "Female": 128 },
+      "66-70": { "Male": 158, "Female": 143 },
+      "71-75": { "Male": 182, "Female": 162 }
+    },
+    "CA": {
+      "65":    { "Male": 155, "Female": 138 },
+      "66-70": { "Male": 173, "Female": 154 },
+      "71-75": { "Male": 198, "Female": 175 }
+    },
+    "TX": {
+      "65":    { "Male": 131, "Female": 118 },
+      "66-70": { "Male": 147, "Female": 132 },
+      "71-75": { "Male": 168, "Female": 150 }
+    },
+    "NY": {
+      "65":    { "Male": 310, "Female": 310 },
+      "66-70": { "Male": 310, "Female": 310 },
+      "71-75": { "Male": 310, "Female": 310 },
+      "_note": "NY uses community rating — premiums do not vary by age"
+    },
+    "PA": {
+      "65":    { "Male": 128, "Female": 115 },
+      "66-70": { "Male": 143, "Female": 128 },
+      "71-75": { "Male": 164, "Female": 146 }
+    },
+    "OH": {
+      "65":    { "Male": 118, "Female": 106 },
+      "66-70": { "Male": 132, "Female": 118 },
+      "71-75": { "Male": 151, "Female": 135 }
+    },
+    "IL": {
+      "65":    { "Male": 124, "Female": 111 },
+      "66-70": { "Male": 139, "Female": 124 },
+      "71-75": { "Male": 159, "Female": 142 }
+    },
+    "MI": {
+      "65":    { "Male": 122, "Female": 109 },
+      "66-70": { "Male": 136, "Female": 122 },
+      "71-75": { "Male": 156, "Female": 139 }
+    },
+    "NC": {
+      "65":    { "Male": 135, "Female": 121 },
+      "66-70": { "Male": 151, "Female": 135 },
+      "71-75": { "Male": 173, "Female": 154 }
+    },
+    "AZ": {
+      "65":    { "Male": 129, "Female": 116 },
+      "66-70": { "Male": 144, "Female": 129 },
+      "71-75": { "Male": 165, "Female": 147 }
+    }
+  }
+}
