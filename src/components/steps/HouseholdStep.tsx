@@ -144,11 +144,11 @@ export function HouseholdStep() {
           placeholder="e.g. 64"
         />
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">Sex</label>
-          <div className="flex flex-wrap gap-3">
+        <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+          <legend className="text-sm font-medium text-gray-700">Sex</legend>
+          <div className="flex flex-wrap gap-3 mt-1">
             {SEX_SELECT_OPTIONS.map((opt) => (
-              <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+              <label key={opt.value} className="flex items-center gap-2 cursor-pointer min-h-[44px]">
                 <input
                   type="radio"
                   name="sex"
@@ -158,7 +158,7 @@ export function HouseholdStep() {
                     setSex(opt.value);
                     setErrors((prev) => ({ ...prev, sex: "" }));
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-700">{opt.label}</span>
               </label>
@@ -169,15 +169,15 @@ export function HouseholdStep() {
               {errors.sex}
             </p>
           )}
-        </div>
+        </fieldset>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">
+        <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+          <legend className="text-sm font-medium text-gray-700">
             Marital status
-          </label>
-          <div className="flex gap-6">
+          </legend>
+          <div className="flex gap-6 mt-1">
             {(["single", "married"] as const).map((opt) => (
-              <label key={opt} className="flex items-center gap-2 cursor-pointer">
+              <label key={opt} className="flex items-center gap-2 cursor-pointer min-h-[44px]">
                 <input
                   type="radio"
                   name="marital_status"
@@ -188,7 +188,7 @@ export function HouseholdStep() {
                     setErrors((prev) => ({ ...prev, marital_status: "" }));
                     if (opt === "single") setSpouseAge("");
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-700 capitalize">{opt}</span>
               </label>
@@ -199,7 +199,7 @@ export function HouseholdStep() {
               {errors.marital_status}
             </p>
           )}
-        </div>
+        </fieldset>
 
         {maritalStatus === "married" && (
           <Input
@@ -231,10 +231,10 @@ export function HouseholdStep() {
           error={errors.state}
         />
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">
+        <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+          <legend className="text-sm font-medium text-gray-700">
             Do you have 40+ quarters of work credits (10+ years working)?
-          </label>
+          </legend>
           <p className="text-xs text-gray-500">
             Most people do. If you&#39;re not sure, check your Social Security
             statement at ssa.gov.
@@ -244,7 +244,7 @@ export function HouseholdStep() {
               { value: "true", label: "Yes" },
               { value: "false", label: "No" },
             ].map((opt) => (
-              <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+              <label key={opt.value} className="flex items-center gap-2 cursor-pointer min-h-[44px]">
                 <input
                   type="radio"
                   name="has_40_credits"
@@ -254,7 +254,7 @@ export function HouseholdStep() {
                     setHas40Credits(opt.value);
                     setErrors((prev) => ({ ...prev, has_40_credits: "" }));
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-700">{opt.label}</span>
               </label>
@@ -265,7 +265,7 @@ export function HouseholdStep() {
               {errors.has_40_credits}
             </p>
           )}
-        </div>
+        </fieldset>
       </div>
 
       <div className="flex justify-between pt-2">

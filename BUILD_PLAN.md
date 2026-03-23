@@ -213,20 +213,24 @@ Blocked on rules engine (Phase 1C) and Medigap data. Can start Step 8 immediatel
 ## Phase 4 — Polish & Launch (~15 min CC)
 
 ```
-[ ] 4A  Accessibility pass
+[x] 4A  Accessibility pass
         - WCAG 2.1 AA: keyboard nav, focus rings, screen reader labels on all inputs
-        - 16px minimum body text, high contrast ratios
-        - Touch targets ≥44px on mobile
+        - 16px minimum body text, high contrast ratios (globals.css confirmed 1rem base)
+        - Touch targets ≥44px on mobile (min-h-[44px] added to all radio labels)
+        - fieldset/legend for all radio groups in Steps 2–6 (WCAG 2.1 SC 1.3.1)
 
-[ ] 4B  Mobile layout QA
-        - Sticky header dots + progress overlay
-        - Bottom sheet running summary (pull-up handle)
-        - Tab bar on Step 7, sticky cost bar
-        - Print behavior on mobile (opens browser print dialog)
+[x] 4B  Mobile layout QA
+        - Sticky header dots + progress overlay (MobileProgress.tsx — confirmed OK)
+        - Bottom sheet running summary (pull-up handle — confirmed OK)
+        - Tab bar on Step 7, sticky cost bar (ScenarioTabs.tsx — confirmed OK)
+        - Print behavior on mobile (opens browser print dialog via window.print())
 
-[ ] 4C  CSP + security headers (vercel.json or next.config.ts)
-        - Content-Security-Policy blocking inline scripts
-        - X-Frame-Options, X-Content-Type-Options, Referrer-Policy
+[x] 4C  CSP + security headers (next.config.ts)
+        - Content-Security-Policy (note: 'unsafe-inline' needed for Next.js App Router;
+          nonce-based strict CSP is a recommended future improvement)
+        - X-Frame-Options: DENY, X-Content-Type-Options: nosniff
+        - Referrer-Policy: strict-origin-when-cross-origin
+        - Permissions-Policy: camera=(), microphone=(), geolocation=()
 
 [ ] 4D  Vercel deploy + smoke test
         - Deploy to preview URL

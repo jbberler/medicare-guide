@@ -86,7 +86,7 @@ export function ScenariosStep() {
         </div>
         <button
           onClick={() => goBack()}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-4 py-2 min-h-[44px] text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
         >
           ← Go back
         </button>
@@ -119,13 +119,13 @@ export function ScenariosStep() {
       <div className="flex items-center justify-between pt-4 border-t border-gray-200">
         <button
           onClick={() => goBack()}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-4 py-2 min-h-[44px] text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
         >
           ← Back
         </button>
         <button
           onClick={() => advance()}
-          className="px-6 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-6 py-2.5 min-h-[44px] text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
         >
           Continue to your memo →
         </button>

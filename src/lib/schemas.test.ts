@@ -14,7 +14,6 @@ const base = {
   employer_size_20_plus: true,
   employer_premium: 500,
   irmaa_bracket: "tier1" as const,
-  retiring_within_12_months: false,
   health_status: "healthy" as const,
   medications_level: "none" as const,
   has_specific_doctors: false,

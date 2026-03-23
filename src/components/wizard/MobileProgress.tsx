@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useWizard, TOTAL_STEPS } from "./WizardShell";
 
 const STEP_LABELS: Record<number, string> = {
@@ -20,6 +20,51 @@ export function MobileProgress() {
 
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  // Focus trap: when overlay opens, move focus inside and trap Tab within it.
+  // When overlay closes, return focus to the trigger button.
+  useEffect(() => {
+    if (!overlayOpen) {
+      triggerRef.current?.focus();
+      return;
+    }
+
+    const overlay = document.getElementById("progress-overlay");
+    if (!overlay) return;
+
+    // Focus the close button (first focusable element)
+    const focusable = Array.from(
+      overlay.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    );
+    focusable[0]?.focus();
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOverlayOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [overlayOpen]);
 
   // Key inputs for the pull-up summary sheet
   const summaryItems: string[] = [];
@@ -45,6 +90,7 @@ export function MobileProgress() {
       {/* Sticky header — visible on mobile only */}
       <div className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-gray-200 bg-white px-4 md:hidden print:hidden">
         <button
+          ref={triggerRef}
           onClick={() => setOverlayOpen(true)}
           className="flex flex-1 items-center gap-2 min-h-[44px]"
           aria-label={`Progress: step ${currentStep} of ${TOTAL_STEPS}. Open overview.`}
@@ -82,6 +128,7 @@ export function MobileProgress() {
       {/* Full-screen progress overlay (tap dots to open) */}
       {overlayOpen && (
         <div
+          id="progress-overlay"
           className="fixed inset-0 z-50 bg-white overflow-y-auto md:hidden"
           role="dialog"
           aria-modal={true}

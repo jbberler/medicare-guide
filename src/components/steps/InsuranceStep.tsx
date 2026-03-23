@@ -97,15 +97,15 @@ export function InsuranceStep() {
       />
 
       <div className="space-y-4">
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-gray-700">
+        <fieldset className="flex flex-col gap-2 border-0 p-0 m-0">
+          <legend className="text-sm font-medium text-gray-700">
             What type of health coverage do you currently have?
-          </label>
-          <div className="flex flex-col gap-2">
+          </legend>
+          <div className="flex flex-col gap-2 mt-1">
             {COVERAGE_TYPES.map((type) => (
               <label
                 key={type}
-                className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors min-h-[44px]"
                 style={{
                   borderColor:
                     coverageType === type ? "#4f46e5" : "#d1d5db",
@@ -128,7 +128,7 @@ export function InsuranceStep() {
                       setEmployerPremium("");
                     }
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-800">
                   {COVERAGE_TYPE_LABELS[type]}
@@ -141,7 +141,7 @@ export function InsuranceStep() {
               {errors.coverage_type}
             </p>
           )}
-        </div>
+        </fieldset>
 
         {isEmployerGroup && (
           <div className="space-y-4 rounded-lg border border-indigo-100 bg-indigo-50 p-4">
@@ -162,18 +162,18 @@ export function InsuranceStep() {
               error={errors.employer_holder}
             />
 
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700">
+            <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+              <legend className="text-sm font-medium text-gray-700">
                 Does the employer have 20 or more employees?
-              </label>
-              <div className="flex gap-6">
+              </legend>
+              <div className="flex gap-6 mt-1">
                 {[
                   { value: "true", label: "Yes" },
                   { value: "false", label: "No / Not sure" },
                 ].map((opt) => (
                   <label
                     key={opt.value}
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex items-center gap-2 cursor-pointer min-h-[44px]"
                   >
                     <input
                       type="radio"
@@ -187,7 +187,7 @@ export function InsuranceStep() {
                           employer_size_20_plus: "",
                         }));
                       }}
-                      className="accent-indigo-600"
+                      className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                     />
                     <span className="text-sm text-gray-700">{opt.label}</span>
                   </label>
@@ -198,7 +198,7 @@ export function InsuranceStep() {
                   {errors.employer_size_20_plus}
                 </p>
               )}
-            </div>
+            </fieldset>
 
             <Input
               id="employer_premium"
