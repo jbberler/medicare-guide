@@ -1,0 +1,20 @@
+{
+  "partB": {
+    "standardMonthlyPremium": 185.00,
+    "annualDeductible": 257.00,
+    "note": "Standard premium for beneficiaries at base IRMAA bracket (income ≤$103K single / ≤$206K married)"
+  },
+  "partD": {
+    "standardMonthlyPremium": 0.00,
+    "annualDeductible": 590.00,
+    "note": "Part D base premium varies by plan; $0 base IRMAA surcharge for income ≤$103K single / ≤$206K married. MA-PD plans often $0 premium.",
+    "maDefaultMonthlyPremium": 18.00
+  },
+  "partA": {
+    "premiumWith0to29Quarters": 518.00,
+    "premiumWith30to39Quarters": 284.00,
+    "premiumWith40PlusQuarters": 0.00,
+    "annualDeductible": 1676.00,
+    "note": "Part A is premium-free for those with 40+ work credits (10+ years Medicare taxes paid)"
+  }
+}

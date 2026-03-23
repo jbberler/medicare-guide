@@ -1,5 +1,53 @@
 # TODOS
 
+## Engine: Part A Work-Quarter Precision
+
+**What:** `has_40_credits` is a boolean, but Medicare Part A has two premium tiers for people without 40 credits: $284/mo (30–39 quarters) and $518/mo (<30 quarters). The engine currently always uses $518/mo when `has_40_credits = false`.
+
+**Fix:** Replace `has_40_credits: z.boolean()` with `work_quarter_band: z.enum(["40+", "30-39", "<30"])` in schemas.ts. Update engine.ts `partAMonthly` lookup to use all three values from `partbd-2026.json`.
+
+**Impact:** Users with 30–39 work quarters are quoted $234/mo too high for Scenario A. Silent cost overquote.
+
+**Effort:** ~30 min CC
+
+**Priority:** P1 (affects cost accuracy; fix before public launch)
+
+**Noticed by:** adversarial review on jbberler/phase1-foundation (2026-03-23)
+
+---
+
+## Engine: COBRA + Base IRMAA Conflicting Signals
+
+**What:** When `coverage_type === "cobra"` AND `irmaa_bracket === "base"`, the engine returns both `cobraAcaWarning: true` (penalty warning) and `noTargetPersonaRedirect: true` ("situation is straightforward"). These are contradictory — COBRA is never straightforward.
+
+**Fix:** In `computeScenarios`, gate `noTargetPersonaRedirect` to exclude COBRA/ACA users: `const noTargetPersonaRedirect = !hasEmployerCoverage && !isCobraOrAca && inputs.irmaa_bracket === "base"`.
+
+**Impact:** COBRA users at base IRMAA get a misleading "straightforward" redirect. They are actually in the highest-risk group for late-enrollment penalty.
+
+**Effort:** 1-line fix
+
+**Priority:** P1 (fix before public launch)
+
+**Noticed by:** adversarial review on jbberler/phase1-foundation (2026-03-23)
+
+---
+
+## Schema: employer_premium Required for employer_group
+
+**What:** The Zod schema marks `employer_premium` as optional even when `coverage_type === "employer_group"`. If the wizard step doesn't enforce it, the engine silently uses $0 and Scenario A appears artificially cheap.
+
+**Fix:** Add a `superRefine` rule in `schemas.ts`: if `coverage_type === "employer_group"` and `employer_premium === undefined`, issue a validation error on `employer_premium`.
+
+**Impact:** Silent $0 cost for Scenario A if the UI doesn't enforce the field.
+
+**Effort:** ~5 min CC
+
+**Priority:** P2 (UI will enforce it; schema validation is a belt-and-suspenders fix)
+
+**Noticed by:** adversarial review on jbberler/phase1-foundation (2026-03-23)
+
+---
+
 ## Annual Rate Update Process
 
 **What:** Define and implement a process for updating Medicare rate data (IRMAA brackets, Medigap premiums, Part B/D tables) each October/November when CMS publishes new rates.
