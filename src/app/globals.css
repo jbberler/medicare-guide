@@ -29,11 +29,6 @@ body {
 
 /* ─── Print styles ─────────────────────────────────────────────────────────── */
 @media print {
-  /* Hide chrome — only memo content should print */
-  .print\:hidden {
-    display: none !important;
-  }
-
   /* Ensure full-width content for memo layout */
   #wizard-main {
     width: 100% !important;

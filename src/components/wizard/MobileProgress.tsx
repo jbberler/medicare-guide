@@ -85,10 +85,10 @@ export function MobileProgress() {
           className="fixed inset-0 z-50 bg-white overflow-y-auto md:hidden"
           role="dialog"
           aria-modal={true}
-          aria-label="Progress overview"
+          aria-labelledby="progress-overlay-title"
         >
           <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4">
-            <h2 className="text-lg font-semibold text-gray-900">Your progress</h2>
+            <h2 id="progress-overlay-title" className="text-lg font-semibold text-gray-900">Your progress</h2>
             <button
               onClick={() => setOverlayOpen(false)}
               className="rounded-md p-2 min-h-[44px] min-w-[44px] text-gray-500 hover:bg-gray-100"
