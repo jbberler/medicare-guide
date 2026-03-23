@@ -15,7 +15,13 @@ All notable changes to Medicare Guidepost will be documented in this file.
 - **P2 — Schema: `employer_premium` validation** (`schemas.ts`): Added `superRefine` requiring `employer_premium` when `coverage_type === "employer_group"` (belt-and-suspenders; UI also enforces)
 - **P3 — Accessibility: `<fieldset>/<legend>` for radio groups** (Steps 2–6): All radio button groups now use `<fieldset>/<legend>` instead of `<div>/<label>`. Fixes WCAG 2.1 SC 1.3.1 (Info and Relationships) — screen readers now correctly announce the group question when focus moves to individual radio options
 - **Accessibility: touch targets** (Steps 2–6): All radio button labels now have `min-h-[44px]` for WCAG 2.1 AA touch target compliance on mobile
+- **Accessibility: focus rings** (Steps 2–6): All radio inputs now have `focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1` for keyboard-accessible focus indicators
+- **Accessibility: MobileProgress focus trap** (`MobileProgress.tsx`): Progress overlay now traps Tab focus within the dialog; Escape closes and returns focus to trigger
+- **Accessibility: raw button touch targets** (`MemoStep.tsx`, `ScenariosStep.tsx`): All raw `<button>` elements (error-state back, memo confirm yes/no, print, "Can't print?") now have `min-h-[44px]`
+- **IncomeStep COBRA/ACA redirect guard** (`IncomeStep.tsx`): COBRA and ACA users no longer see the "this may be simple" redirect interstitial, matching engine behavior
 - **Test cleanup** (`steps.test.tsx`): Removed unused `userEvent` import; fixed spurious tuple type cast
+- **E2E test selectors** (`e2e/*.spec.ts`): Updated radio button `name` attributes from stale `retiring_within_12_months` to `retiring_soon_income`
+- **Regression tests** (`engine.test.ts`): Added 7 regression tests covering P1/P2 bug fixes (COBRA redirect, Part A undercount, IRMAA base label)
 
 ## [0.1.6.0] - 2026-03-23
 
