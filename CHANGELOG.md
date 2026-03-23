@@ -2,6 +2,16 @@
 
 All notable changes to Medicare Guidepost will be documented in this file.
 
+## [0.1.2.0] - 2026-03-23
+
+### Added
+- Educational content components (`src/components/education/`):
+  - `RuleSummary` — one-line rule with collapsible "Why this matters" block; used in Steps 2 and 3
+  - `NumberExample` — calculation breakdown table with highlighted result row; used in Step 4 (IRMAA)
+  - `DeadlineStrip` — numbered milestone timeline with warning callouts; used in Step 6 (SEP/penalty windows)
+  - `ComparisonSnippet` — 2-column inline comparison table; used in Step 5 (Original Medicare vs MA)
+- All four components are pure display — typed content props, no wizard context dependency, no hardcoded copy
+
 ## [0.1.1] - 2026-03-23
 
 ### Added
