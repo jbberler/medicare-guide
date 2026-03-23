@@ -2,6 +2,31 @@
 
 All notable changes to Medicare Guidepost will be documented in this file.
 
+## [0.1.3.0] - 2026-03-23
+
+### Added
+- UI primitives (`src/components/ui/`):
+  - `Button` — primary/secondary/ghost variants, disabled state, optional `debounce` prop (blocks re-clicks within the debounce window to prevent double-advance)
+  - `Input` — label, error message, helper text; `aria-describedby`/`aria-invalid` wired for screen-reader error announcement; 44px min touch target
+  - `Select` — label, typed `options` array, error message, placeholder; same WCAG wiring as Input
+  - `Banner` — info/warning/error variants with icon, content slot, and optional dismiss button; used for age gate, return-visit, and private browsing warnings
+- App shell layout (`src/app/layout.tsx` + `src/app/globals.css`):
+  - Two-zone desktop layout: 280px fixed left rail + fluid main pane (≥768px), single-column on mobile
+  - `WizardShell` + `WizardAppShell` wired into root layout; rail and sticky header suppressed on Step 1 (Welcome) to preserve full-width hero
+  - `@media print` styles: hides rail/nav (`print:hidden`), full-width memo content, `#wizard-main` full-width override, 12pt body, `break-inside: avoid` on `.memo-section`, suppressed link-URL expansion
+  - `step-enter` CSS animation (150ms ease-out translateX slide) for step transitions
+  - 16px base font (WCAG 2.1 AA minimum — target users are 64–66)
+  - Footer: "Rates current for 2026 · Last updated March 2026"
+- Wizard navigation components (`src/components/wizard/`):
+  - `ProgressRail` — 8-step list; green checkmarks for completed steps; current step highlighted in blue; back-navigation enabled for completed steps; running summary panel showing key inputs (name, age, state, marital status, coverage type, IRMAA bracket, health status) accumulated as steps complete
+  - `StepNav` — Back/Continue buttons with 300ms debounce; Enter key advances (skips if focused inside an input/select/textarea), Escape key goes back; Continue disabled when `canContinue=false`
+  - `MobileProgress` — sticky 56px header with step indicator dots + current step label; tap-to-open full-screen progress overlay with step list; pull-up bottom sheet showing key inputs; `aria-labelledby` on overlay dialog
+  - `WizardAppShell` — client component managing conditional two-zone layout; renders full-width on Step 1, activates rail + mobile header on Steps 2–8
+
+### Fixed
+- `MobileProgress` dialog: replaced `aria-label` with `aria-labelledby` pointing to visible heading, per ARIA authoring practices
+- `globals.css`: removed redundant `.print\:hidden` manual CSS rule (Tailwind v4 generates this class natively; manual override was unnecessary)
+
 ## [0.1.2.0] - 2026-03-23
 
 ### Added

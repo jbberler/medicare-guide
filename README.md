@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Medicare Guidepost
+
+A guided decision tool that helps people turning 65 choose the right Medicare coverage. TurboTax-style: teaches each concept before asking for input, then produces a personalized printable decision memo.
+
+**No data leaves your browser.** All calculations run client-side. No login, no accounts.
+
+## Status
+
+`v0.1.3.0` — Phase 2 Track A complete (UI primitives + app shell + wizard navigation).
+
+| Phase | Status |
+|-------|--------|
+| Phase 1 — Foundation (schemas, engine, storage, WizardShell) | ✅ Merged |
+| Phase 2 Track A — UI primitives, app shell, wizard nav | ✅ PR open |
+| Phase 2 Track B — Education components | ✅ Merged |
+| Phase 2 Track C — Input steps 2–6 | 🔜 Pending |
+| Phase 2 Track D — Output steps 7–8 + scenario components | 🔜 Pending |
+| Phase 3 — Welcome screen + integration + E2E | 🔜 Pending |
+| Phase 4 — Polish + accessibility + deploy | 🔜 Pending |
+
+## What it does
+
+An 8-step wizard that collects household facts and produces a 3-scenario cost comparison plus a printable decision memo:
+
+- **Scenario A:** Stay on employer insurance, take free Part A only
+- **Scenario B:** Enroll in Original Medicare (Parts A+B) + Medigap Plan G + Part D
+- **Scenario C:** Enroll in Medicare Advantage (Part C)
+
+The recommended scenario is personalized based on employer coverage, IRMAA bracket, health needs, and retirement timeline.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Running tests
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm test          # Vitest unit tests (46 tests)
+npm run build     # TypeScript + Next.js build check
+```
 
-## Learn More
+## Architecture
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/            # Next.js App Router (layout, page, globals.css)
+  components/
+    ui/           # Button, Input, Select, Banner
+    wizard/       # WizardShell (context), WizardAppShell (layout), ProgressRail, StepNav, MobileProgress
+    education/    # RuleSummary, NumberExample, DeadlineStrip, ComparisonSnippet
+    steps/        # HouseholdStep–TimelineStep (Steps 2–6), ScenariosStep (7), MemoStep (8)
+    scenarios/    # ComparisonTable, ScenarioTabs, RecommendationPanel
+  lib/
+    engine.ts     # Pure rules engine: WizardInputs → ScenarioResults
+    schemas.ts    # Zod schemas for all wizard fields
+    storage.ts    # localStorage helpers with 30-day expiry
+  data/
+    irmaa-2026.json       # 2026 IRMAA brackets (Part B + Part D surcharges)
+    partbd-2026.json      # Standard Part A/B/D premiums
+    medigap-2026.json     # Medigap Plan G median estimates (10 states)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [BUILD_PLAN.md](BUILD_PLAN.md) for the full implementation roadmap and [DESIGN.md](DESIGN.md) for the approved design spec.
