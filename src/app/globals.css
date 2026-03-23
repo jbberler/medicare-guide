@@ -69,3 +69,63 @@ body {
 .step-enter {
   animation: step-enter 150ms ease-out both;
 }
+
+/* ── Print styles — decision memo layout ────────────────────────────────────── */
+@media print {
+  /* Hide all interactive UI, navigation, and decorative elements */
+  nav,
+  button,
+  [role="navigation"],
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Reveal the printable memo */
+  .print-memo {
+    display: block !important;
+  }
+
+  /* Page setup */
+  @page {
+    margin: 1in 0.75in;
+    size: letter portrait;
+  }
+
+  /* Typography for print */
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+
+  /* Avoid page breaks inside sections */
+  section,
+  table,
+  li {
+    page-break-inside: avoid;
+  }
+
+  /* Keep section headings with their content */
+  h1,
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+
+  /* Full-width layout for print */
+  .print-memo {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Ensure table borders print */
+  table {
+    border-collapse: collapse;
+  }
+
+  td,
+  th {
+    border-bottom: 1px solid #ccc;
+  }
+}

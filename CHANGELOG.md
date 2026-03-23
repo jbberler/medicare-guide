@@ -2,6 +2,22 @@
 
 All notable changes to Medicare Guidepost will be documented in this file.
 
+## [0.1.5.0] - 2026-03-23
+
+### Added
+- Scenario comparison components (`src/components/scenarios/`):
+  - `ComparisonTable` — responsive 3-column desktop table; recommended scenario highlighted with blue border + badge; Medigap-unavailable notice inline for Scenario B; exhaustive `tagLabel` guard with `never` pattern
+  - `ScenarioTabs` — mobile tabbed view (A/B/C); sticky cost comparison bar with `env(safe-area-inset-bottom)` for iPhone home indicator; dot indicator on recommended tab only (`aria-hidden`); `aria-labelledby` on tabpanel (WCAG 2.1 AA); `?? scenarios[0]` null-safe fallback
+  - `RecommendationPanel` — recommended scenario rationale box or amber trade-offs notice; COBRA/ACA warning banner
+- Step components (`src/components/steps/`):
+  - `ScenariosStep` (Step 7) — 2-second intentional loading interstitial; validates inputs with `WizardInputsSchema.safeParse` before calling `computeScenarios`; handles `LookupError` and unexpected errors; responsive: ComparisonTable on desktop, ScenarioTabs on mobile
+  - `MemoStep` (Step 8) — 1-second loading interstitial; `@media print` printable memo with 7 sections; print flow uses `afterprint` + confirmation screen ("Did you save your memo?") instead of auto-clear to handle dialog-cancel edge case; `useRef` cleanup for `afterprint` listener on unmount; `coverageLabel` exhaustiveness guard
+- Print styles (`src/app/globals.css`): hides UI chrome, reveals `.print-memo`, sets `@page` margins, prevents section page breaks, ensures table borders print
+- Component test coverage (`src/components/**/*.test.tsx`): 29 new tests covering all rendering branches, tab navigation, timer states, print confirmation flow, and error paths
+
+### Fixed
+- `afterprint` fires on print-dialog cancellation — replaced auto-clear with "Did you save your memo?" confirmation screen to prevent accidental data loss
+
 ## [0.1.4.0] - 2026-03-23
 
 ### Added
