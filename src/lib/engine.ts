@@ -128,13 +128,14 @@ export function computeScenarios(inputs: WizardInputs): ScenarioResults {
 
   // Scenario B: Original Medicare + Medigap + Part D
   const scenarioBMonthly =
+    partAMonthly +
     irmaa.partBMonthly +
     (medigapMonthly ?? 0) +
     (irmaa.partDMonthly + partbdData.partD.standardMonthlyPremium);
 
   // Scenario C: Medicare Advantage
   const maMonthlyPremium = partbdData.partD.maDefaultMonthlyPremium;
-  const scenarioCMonthly = irmaa.partBMonthly + maMonthlyPremium;
+  const scenarioCMonthly = partAMonthly + irmaa.partBMonthly + maMonthlyPremium;
 
   // Determine tags via scenario ranking
   const hasEmployerCoverage = inputs.coverage_type === "employer_group";

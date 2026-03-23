@@ -271,7 +271,7 @@ describe("Cost calculations", () => {
       retiring_soon: true,
     });
     const b = result.scenarios[1];
-    const expected = b.partBMonthly + (b.medigapMonthly ?? 0) + b.partDMonthly;
+    const expected = b.partAMonthly + b.partBMonthly + (b.medigapMonthly ?? 0) + b.partDMonthly;
     expect(b.monthlyTotal).toBe(expected);
   });
 
@@ -283,7 +283,7 @@ describe("Cost calculations", () => {
       retiring_soon: true,
     });
     const c = result.scenarios[2];
-    const expected = c.partBMonthly + c.maMonthlyPremium;
+    const expected = c.partAMonthly + c.partBMonthly + c.maMonthlyPremium;
     expect(c.monthlyTotal).toBe(expected);
   });
 });

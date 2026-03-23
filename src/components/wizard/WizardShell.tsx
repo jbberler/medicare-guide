@@ -90,7 +90,8 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
     }
 
     case "GO_TO_STEP": {
-      return { ...state, currentStep: action.step };
+      const clampedStep = Math.max(1, Math.min(action.step, TOTAL_STEPS));
+      return { ...state, currentStep: clampedStep };
     }
 
     case "RESET": {

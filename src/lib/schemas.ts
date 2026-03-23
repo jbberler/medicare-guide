@@ -51,10 +51,11 @@ export const MEDICATIONS_LEVEL_OPTIONS = [
 ] as const;
 export type MedicationsLevel = (typeof MEDICATIONS_LEVEL_OPTIONS)[number];
 
-export const WizardInputsSchema = z
-  .object({
+// Base object without superRefine — exported so callers can call .partial()
+// (Zod v4 does not support .partial() on schemas with .superRefine())
+export const WizardInputsBaseSchema = z.object({
     // Step 1 (Welcome)
-    name: z.string().optional(),
+    name: z.string().max(100).optional(),
 
     // Step 2 (Household)
     age: z.number().int().min(62).max(70),
@@ -83,8 +84,9 @@ export const WizardInputsSchema = z
     retiring_soon: z.boolean(),
     retirement_date: z.string().optional(),
     employer_coverage_end_date: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
+});
+
+export const WizardInputsSchema = WizardInputsBaseSchema.superRefine((data, ctx) => {
     // employer_holder required if coverage_type == "employer_group"
     if (data.coverage_type === "employer_group") {
       if (data.employer_holder === undefined) {

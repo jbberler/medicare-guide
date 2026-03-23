@@ -1,3 +1,4 @@
+import { WizardInputsBaseSchema } from "./schemas";
 import type { PartialWizardInputs } from "./schemas";
 
 const STORAGE_KEY = "medicare_guidepost_wizard";
@@ -17,13 +18,12 @@ export function saveWizardInputs(inputs: PartialWizardInputs): void {
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (err) {
-    // Quota exceeded — retry once with minimal data, then give up gracefully
+    // Quota exceeded — free space by removing the existing entry, then retry with
+    // the real inputs. Only fall back to no-op if the retry also fails.
     try {
-      const minimal: StoredData = {
-        inputs: {},
-        savedAt: Date.now(),
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(minimal));
+      localStorage.removeItem(STORAGE_KEY);
+      const data: StoredData = { inputs, savedAt: Date.now() };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch {
       console.error("localStorage: quota exceeded, progress cannot be saved", err);
     }
@@ -56,7 +56,17 @@ export function loadWizardInputs(): PartialWizardInputs | null {
       return null;
     }
 
-    return parsed.inputs;
+    // Validate loaded data against the schema to prevent NaN propagation
+    // from tampered/stale localStorage entries (e.g., type coercion errors).
+    // We use the partial schema — all fields are optional at load time.
+    const validated = WizardInputsBaseSchema.partial().safeParse(parsed.inputs);
+    if (!validated.success) {
+      console.error("localStorage: stored wizard data failed validation, clearing", validated.error);
+      clearWizardInputs();
+      return null;
+    }
+
+    return validated.data;
   } catch (err) {
     // localStorage unavailable (private browsing, disabled, etc.)
     console.error("localStorage: unavailable", err);
