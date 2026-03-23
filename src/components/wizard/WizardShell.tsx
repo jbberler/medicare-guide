@@ -37,6 +37,8 @@ export type WizardState = {
   completedSteps: Set<number>;
   showResumeBanner: boolean;
   storageAvailable: boolean;
+  // storageCorrupted: reserved for future banner — storage.ts currently handles
+  // corruption internally (resets to null). Wire up when the banner UI is built.
   storageCorrupted: boolean;
   isPrivateBrowsing: boolean;
 };
@@ -165,8 +167,8 @@ export function WizardShell({ children }: WizardShellProps) {
   // On mount: check localStorage availability and hydrate saved state
   useEffect(() => {
     const available = isLocalStorageAvailable();
-    // Heuristic: if localStorage is available but navigator.storage is not quota-based,
-    // it may be private browsing. We detect by checking if available at all.
+    // Heuristic: if localStorage is unavailable, assume private browsing mode.
+    // True private-browsing detection (navigator.storage quota) is a v2 improvement.
     const isPrivateBrowsing = !available;
 
     dispatch({
