@@ -6,15 +6,15 @@ A guided decision tool that helps people turning 65 choose the right Medicare co
 
 ## Status
 
-`v0.1.3.0` — Phase 2 Track A complete (UI primitives + app shell + wizard navigation).
+`v0.1.4.0` — Phase 2 Track D complete (scenario comparison + memo steps).
 
 | Phase | Status |
 |-------|--------|
 | Phase 1 — Foundation (schemas, engine, storage, WizardShell) | ✅ Merged |
-| Phase 2 Track A — UI primitives, app shell, wizard nav | ✅ PR open |
+| Phase 2 Track A — UI primitives, app shell, wizard nav | ✅ Merged |
 | Phase 2 Track B — Education components | ✅ Merged |
 | Phase 2 Track C — Input steps 2–6 | 🔜 Pending |
-| Phase 2 Track D — Output steps 7–8 + scenario components | 🔜 Pending |
+| Phase 2 Track D — Output steps 7–8 + scenario components | ✅ PR open |
 | Phase 3 — Welcome screen + integration + E2E | 🔜 Pending |
 | Phase 4 — Polish + accessibility + deploy | 🔜 Pending |
 
@@ -40,7 +40,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Running tests
 
 ```bash
-npm test          # Vitest unit tests (46 tests)
+npm test          # Vitest unit tests (75 tests)
 npm run build     # TypeScript + Next.js build check
 ```
 
