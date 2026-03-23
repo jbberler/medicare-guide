@@ -92,24 +92,60 @@ Codex (independent cold read, no conversation context):
 
 **Approach B: The Guided Journey.** The educational layer is what makes this product different from everything else in the landscape. The delta between A and B is ~45 minutes of Claude Code time. Your parents said they need to understand it to trust it — Approach B is the only one that addresses that directly.
 
+### App Shell & Layout Architecture
+
+**Desktop (≥768px):** Two-zone layout.
+- **Left rail (280px fixed):** Progress tracker showing all 8 steps (current step highlighted, completed steps show green checkmarks). Below the progress tracker: a "Running Summary" panel that accumulates the user's key inputs as they complete each step (e.g., "Age: 65 · Income: $206K-$258K · Employer coverage: Yes"). This keeps context visible as later steps reference earlier inputs.
+- **Main pane (fluid):** Active step content — educational panel + input fields.
+- **Transition:** When advancing steps, the main pane content transitions with a subtle left-to-right slide (150ms ease-out). No page reload.
+
+**Mobile (<768px):** Single-column with persistent context.
+- **Sticky header (56px):** Step indicator dots (like iOS onboarding) + current step label. Tapping the dots opens a full-screen progress overlay showing all steps and the running summary.
+- **Main content:** Active step (educational content + inputs), full-width.
+- **Bottom sheet (collapsible):** Running summary accessible via a pull-up handle. Collapsed by default, showing one line ("3 of 8 completed").
+
+**Navigation:** Back and forward buttons at the bottom of the main pane. Back button always available after Step 1. Forward button disabled until required fields pass validation. Keyboard: Enter advances, Escape goes back.
+
 ### Core Flow (8 steps)
 
-Each step follows the **teach-then-ask** pattern: a blue educational panel (3-5 sentences explaining the concept in plain language, with a concrete example using realistic numbers) appears above the input fields. The educational panel is always visible — not collapsed or optional — because building understanding is the core product value. Approximate copy length: 60-100 words per educational panel.
+Each step follows the **teach-then-ask** pattern: an educational panel appears above the input fields in the main pane. The educational content varies in format to prevent "wallpaper" fatigue (see Educational Content Formats below). Approximate copy length: 30-60 words for most steps, up to 100 words for the IRMAA step which requires more explanation.
 
-**Age gate:** If the primary user enters an age under 65, show an interstitial: "Medicare eligibility begins at 65. This tool is designed for people turning 65 soon. If you're planning ahead, you can still explore — but enrollment actions won't apply yet." Allow them to continue with a disclaimer, or exit gracefully.
+**Educational Content Formats (vary by step to maintain engagement):**
+- **One-line rule summary** with an expandable "Why this matters" block (Steps 2, 3)
+- **Mini number example** showing a specific calculation ("If your AGI is $250K, your Part B premium is $X/mo instead of $185/mo") (Step 4)
+- **Deadline strip** — a timeline graphic showing key dates and penalty windows (Step 6)
+- **Comparison snippet** — a 2-row mini-table contrasting two options inline (Step 5)
 
-1. **Welcome** — set expectations: ~15-20 minutes, you'll get a personalized decision memo. No data leaves your browser.
+**Age gate:** If the primary user enters an age under 65, replace the step content (not a modal) with an interstitial: "Medicare eligibility begins at 65. This tool is designed for people turning 65 soon. If you're planning ahead, you can still explore — but enrollment actions won't apply yet." Two buttons: "Continue exploring" (appends a persistent yellow banner to all subsequent steps: "You're under 65 — exploring ahead of your eligibility window") and "Exit" (returns to Welcome).
+
+1. **Welcome** — Hero: a visual "Medicare Decision Map" showing the flow: Current Coverage → Your Age → Your Income → Your Recommendation. One CTA: "Build my decision memo →". Below: brief expectations (15-20 minutes, personalized output, no data leaves your browser). The decision map IS the brand — it immediately communicates what this tool does and why it's different from a generic Medicare article.
 2. **Your household** — collect: ages (both spouses), sex (for Medigap premium lookup — uses CMS terminology "sex at birth"), marital status, state of residence. Teach: why age and state matter (Medicare eligibility at 65, Medigap premiums vary by state and sex, some states have guaranteed-issue protections).
 3. **Your insurance** — collect: who has employer coverage (you, your spouse, or both), current coverage type (employer group, COBRA, ACA, none), employer size (20+ employees?), monthly premium, who is covered. Teach: how employer insurance interacts with Medicare — the Medicare Secondary Payer rules differ based on who holds the policy. If the turning-65 person's employer has 20+ employees, employer plan is primary and Part B can be deferred penalty-free. If coverage is through a spouse's employer, the same 20+ rule applies but through the spouse's employer.
 4. **Your income** — collect: IRMAA bracket via dropdown (ranges, not exact figures), expected income change (retiring within 12 months?). Teach: IRMAA explained — Medicare uses your tax return from 2 years ago, higher income = higher premiums, and you can appeal (SSA-44 form) if income drops due to a qualifying life event like retirement.
 5. **Your health** — collect: general health (healthy / managing conditions / frequent care), current medications (none / few generics / specialty drugs), provider preference (specific doctors important? yes/no). Teach: how networks differ — Original Medicare lets you see any Medicare-accepting doctor nationwide, Medicare Advantage restricts to plan networks, Medigap supplements Original Medicare with predictable costs.
 6. **Your timeline** — collect: planned retirement date (or already retired), when employer coverage ends. "Retiring soon" is defined as **within 12 months**. Teach: Special Enrollment Period rules — you have 8 months after employer coverage ends to enroll in Part B without penalty. Missing this window means a permanent 10% surcharge per year you were late.
-7. **Your scenarios** — no input, output only. Three scenario cards (see below). Each card shows monthly cost breakdown, annual total, provider access, penalty risk, and a "why this fits/doesn't fit your situation" explanation personalized to their inputs.
-8. **Your decision memo** — printable summary generated entirely in-browser via CSS print styles + `window.print()`. No server involved.
+7. **Your scenarios** — no input, output only. Presented as a comparison table (desktop) or tabbed view (mobile). Between Step 6 and Step 7, show a 2-second "Analyzing your situation..." loading interstitial with a summary of key inputs being processed. This is a trust mechanism — instant results feel like templates.
+8. **Your decision memo** — Transitional "Your memo is ready" screen with a plain-language summary of the recommendation before offering print/save. Then: printable summary generated entirely in-browser via CSS print styles + `window.print()`. No server involved.
 
-### The Three Scenarios
+### The Three Scenarios — Comparison Table
 
-Every user sees exactly three scenarios, personalized to their inputs:
+**Desktop layout:** A comparison table with rows and 3 columns. The recommended scenario column has a subtle highlight (light background tint + "Best fit" badge).
+
+| Dimension | Scenario A: Keep Employer Plan | Scenario B: Original Medicare + Medigap | Scenario C: Medicare Advantage |
+|---|---|---|---|
+| Monthly cost | $0 (Part A) + employer premium | Part B + IRMAA + Medigap + Part D | Part B + IRMAA + MA premium |
+| Annual total | [calculated] | [calculated] | [calculated] |
+| IRMAA impact | None | Full (Part B + Part D) | Part B only |
+| Doctor freedom | Current network only | Any Medicare doctor nationwide | Plan network only |
+| Penalty risk | None (employer exemption) | None if enrolling during IEP/SEP | None if enrolling during IEP/SEP |
+| Best when | Good employer plan, high income, not retiring soon | Retiring soon, want broadest access | Cost priority, OK with network limits |
+| **Your fit** | [personalized "why this fits/doesn't fit" — 1-2 sentences] | [personalized] | [personalized] |
+
+Below the table: one recommendation panel with the "Best fit" scenario's rationale in a highlighted box.
+
+**Mobile layout:** Tab bar with "A: Employer" / "B: Medicare + Medigap" / "C: Advantage" tabs. Each tab shows one scenario's full breakdown. Sticky comparison bar at bottom showing all three monthly costs simultaneously so the user can compare while viewing details.
+
+**Scenario details:**
 
 **Scenario A: Stay on employer insurance, take free Part A only**
 - Monthly cost: $0 (Part A is free with 40+ work credits; if <40 credits, Part A has a premium — noted with disclaimer) + existing employer premium
@@ -135,9 +171,12 @@ Every user sees exactly three scenarios, personalized to their inputs:
 ### Rules Engine — High-Level Decision Logic
 
 ```
-INPUT: age, spouse_age, sex, state, employer_coverage (bool),
-       employer_is_primary_user (bool — does the turning-65 person hold the policy?),
-       employer_size (20+?), employer_premium, irmaa_bracket,
+INPUT: age, spouse_age, sex, state,
+       coverage_type (enum: "employer_group" | "cobra" | "aca" | "none"),
+       employer_holder (enum: "me" | "spouse" | "both" — only if coverage_type == "employer_group"),
+       employer_size (20+? — only if coverage_type == "employer_group"),
+       employer_premium (monthly — only if coverage_type != "none"),
+       irmaa_bracket,
        retiring_soon (bool — within 12 months), retirement_date,
        health_status, has_specific_doctors (bool), medications_level
 
@@ -151,11 +190,22 @@ MEDIGAP LOOKUP:
   Medigap figures: "Estimate based on state medians. Actual quotes vary by insurer.
   Contact a SHIP counselor or insurer for exact pricing."
 
+COBRA/ACA GATE (check FIRST, before scenario ranking):
+  IF coverage_type == "COBRA" OR coverage_type == "ACA":
+    → NEVER recommend Scenario A
+    → Show prominent warning: "⚠️ COBRA/ACA coverage is NOT creditable for Medicare.
+       Delaying Part B enrollment while on COBRA/ACA will result in a permanent
+       late-enrollment penalty (10% surcharge per year of delay)."
+    → Skip to Scenario B vs C comparison below
+    → Add to decision memo action items: "Enroll in Part B immediately — your
+       COBRA/ACA coverage does not protect you from late-enrollment penalties."
+
 SCENARIO RANKING:
-  IF employer_coverage AND employer_size >= 20 AND NOT retiring_soon:
+  IF employer_coverage AND employer_size >= 20 AND NOT retiring_soon
+      AND coverage_type != "COBRA" AND coverage_type != "ACA":
     → Tag Scenario A as "Best fit for your situation"
     → Reason: IRMAA avoidance saves $X/year, no penalty risk with creditable coverage
-  ELIF retiring_soon OR NOT employer_coverage:
+  ELIF retiring_soon OR NOT employer_coverage OR coverage_type IN ("COBRA", "ACA"):
     IF has_specific_doctors:
       → Tag Scenario B as "Best fit for your situation"
       → Reason: Broadest provider access, predictable costs
@@ -173,16 +223,38 @@ SCENARIO RANKING:
   Always show all three scenarios regardless of recommendation.
 ```
 
+### Interaction States
+
+| Feature | Loading | Empty | Error | Success | Partial |
+|---------|---------|-------|-------|---------|---------|
+| Welcome screen | N/A | N/A | N/A | Decision map renders with CTA | N/A |
+| Steps 2-6 (input steps) | N/A | Fields pre-filled if returning user (see Persistence) | Inline validation: warm, guiding tone (see examples below) | Step complete → checkmark in progress rail, input added to Running Summary | Back-nav restores all previous inputs |
+| Step 7 (scenarios) | "Analyzing your situation..." interstitial (2s) showing key inputs being processed | Medigap data unavailable for state: Scenario B renders all fields except Medigap premium, which shows "[State] estimates unavailable — get a free quote at shiphelp.org" inline. Card stays visible. | Rules engine error (shouldn't happen with validated inputs): "Something went wrong. Your data is saved — try refreshing." | Comparison table appears with recommended scenario highlighted | N/A |
+| Step 8 (decision memo) | Brief "Preparing your memo..." (1s) | N/A | Print dialog fails: show "Download as PDF" fallback button | "Your memo is ready" transitional screen → print/download actions | N/A |
+
+**Validation error tone examples:**
+- Instead of: "Invalid age" → Use: "Medicare eligibility starts at 65. Enter your age as of this year."
+- Instead of: "Required field" → Use: "We need this to calculate your options — it stays in your browser."
+- Instead of: "Invalid income bracket" → Use: "Pick the income range closest to your 2024 tax return — you can adjust this later."
+
+**Mid-flow persistence (localStorage):**
+- Auto-save all inputs on each step completion to localStorage.
+- On return visit: auto-resume at last completed step with a banner: "Welcome back — your information is saved locally. Pick up where you left off." Two actions: "Continue" (resumes) and "Start over" (clears localStorage).
+- localStorage data expires after 30 days.
+- Clear localStorage when the user prints/downloads the decision memo (journey complete).
+
+**Name field:** Add an optional first-name field to Step 1 (Welcome), below the decision map CTA. Label: "What should we call you? (optional — stays in your browser)". Used in the memo header. If blank, memo reads "Your Medicare Decision Memo" instead of "Medicare Decision Memo — Prepared for [Name]".
+
 ### Input Validation (Zod schemas)
 
-- All fields required except retirement_date (only required if retiring_soon = true)
+- All fields required except retirement_date (only required if retiring_soon = true) and name (always optional)
 - Age: 62-70 (reasonable window around Medicare eligibility; ages 62-64 trigger age-gate interstitial)
-- Sex: enum ("Male", "Female") — used for Medigap premium lookup per CMS rating methodology
+- Sex: enum ("Male", "Female", "Prefer not to say") — "Prefer not to say" defaults to higher premium estimate (Female) with note: "We'll use the higher estimate to give you a conservative cost picture."
 - Income bracket: enum of IRMAA tiers (dropdown, not free text)
 - Employer size: boolean (20+ or not — this is the Medicare Secondary Payer threshold)
 - Employer holder: enum ("me", "spouse", "both") — determines MSP rules
-- State: US state enum (for Medigap premium lookup)
-- Inline validation with helpful error messages
+- State: US state enum (for Medigap premium lookup). States outside the curated 10-15 show a notice after selection: "We don't have Medigap estimates for [State] yet. You'll still get scenarios A and C with full numbers, and Scenario B with all details except the Medigap premium."
+- Inline validation with warm, guiding error messages (see tone examples above)
 
 ### Decision Memo Structure
 
@@ -197,6 +269,53 @@ The printable memo contains:
 8. **Footer:** "Bring this memo to your SHIP counselor for a free 15-minute review. Find yours at shiphelp.org"
 
 Generated entirely client-side via CSS `@media print` styles and `window.print()`. No server-side PDF generation. All data stays in the browser.
+
+### File Structure
+
+```
+src/
+  app/                    # Next.js App Router
+    page.tsx              # Welcome (Step 1) — decision map hero + CTA
+    layout.tsx            # App shell — two-zone layout (rail + main pane)
+    globals.css           # Tailwind base + print styles
+  components/
+    wizard/               # Wizard infrastructure
+      WizardShell.tsx     # Manages current step, back/forward, localStorage persistence
+      ProgressRail.tsx    # Left rail (desktop) — step list + running summary
+      StepNav.tsx         # Back/Continue buttons + keyboard handlers
+      MobileProgress.tsx  # Sticky header dots + progress overlay (mobile)
+    steps/                # One component per step (Steps 2-8)
+      HouseholdStep.tsx   # Step 2: ages, sex, state
+      InsuranceStep.tsx   # Step 3: coverage type, employer details
+      IncomeStep.tsx      # Step 4: IRMAA bracket, retirement plans
+      HealthStep.tsx      # Step 5: health status, medications, doctors
+      TimelineStep.tsx    # Step 6: retirement date, employer coverage end
+      ScenariosStep.tsx   # Step 7: comparison table output
+      MemoStep.tsx        # Step 8: decision memo + print/download
+    scenarios/            # Scenario comparison components
+      ComparisonTable.tsx # Desktop: rows × 3 columns with highlight
+      ScenarioTabs.tsx    # Mobile: tabbed view with sticky cost bar
+      RecommendationPanel.tsx # "Best fit" rationale box
+    education/            # Varied educational content formats
+      RuleSummary.tsx     # One-line rule + expandable "Why this matters"
+      NumberExample.tsx   # Mini calculation example
+      DeadlineStrip.tsx   # Timeline graphic for penalty windows
+      ComparisonSnippet.tsx # 2-row inline comparison table
+    ui/                   # Shared primitives
+      Button.tsx
+      Select.tsx
+      Input.tsx
+      Banner.tsx          # Age-gate warning, return-visit banner
+  lib/
+    engine.ts             # Rules engine — pure function: WizardInputs → ScenarioResults
+    engine.test.ts        # Unit tests for every branch in the decision tree
+    schemas.ts            # Zod schemas for all wizard inputs
+    storage.ts            # localStorage read/write/clear/expiry helpers
+  data/
+    irmaa-2026.json       # IRMAA bracket → Part B premium + Part D surcharge
+    medigap-2026.json     # State × age band × sex → Medigap Plan G median premium
+    partbd-2026.json      # Standard Part B and Part D premiums
+```
 
 ### Tech Stack
 
@@ -215,6 +334,72 @@ Medigap premium tables by age band, sex, and state are **not available as a sing
 **v1 approach:** Limit to a curated set of 10-15 states with the most accessible rate data (start with the founder's parents' state). Use median Plan G premiums across top 5 insurers in each state, bucketed by age (65, 66-70, 71-75) and sex. Display a prominent disclaimer: "Estimate based on state medians across major insurers. Your actual quote may be 20-40% higher or lower. Contact a SHIP counselor for exact pricing."
 
 **v2:** Expand to all 50 states as rate data is collected. Consider partnering with a data aggregator or scraping state insurance commission public filings.
+
+## Test Plan
+
+**Framework:** Vitest (unit tests) + Playwright (E2E). Both are standard Next.js tooling [Layer 1].
+
+### Unit Tests: lib/engine.test.ts (~20 tests)
+
+**COBRA/ACA Gate:**
+- `coverage_type "cobra" → Scenario A never tagged as best fit`
+- `coverage_type "aca" → Scenario A never tagged as best fit`
+- `coverage_type "cobra" → penalty warning included in output`
+- `coverage_type "employer_group" → passes through to normal ranking`
+
+**IRMAA Lookup:**
+- `each of 6 IRMAA brackets → correct Part B monthly premium (test all 6)`
+- `each of 6 IRMAA brackets → correct Part D monthly surcharge (test all 6)`
+
+**Medigap Lookup:**
+- `supported state + age 65 + Male → returns premium`
+- `supported state + age 65 + Female → returns premium (different from Male)`
+- `unsupported state → returns null`
+- `sex "Prefer not to say" → uses Female premium`
+
+**Scenario Ranking:**
+- `employer + size≥20 + not retiring → tags Scenario A`
+- `retiring_soon + has_specific_doctors → tags Scenario B`
+- `retiring_soon + no doctors + cost diff > $150 → tags Scenario C`
+- `retiring_soon + no doctors + cost diff ≤ $150 → tags Scenario B`
+- `employer + size<20 → no best-fit tag`
+- `no employer coverage → B or C based on comparison`
+- `COBRA user + retiring_soon → Scenario B or C (never A)`
+
+**Cost Calculation:**
+- `Scenario A total = $0 + employer_premium`
+- `Scenario B total = Part B (with IRMAA) + Medigap + Part D (with IRMAA)`
+- `Scenario C total = Part B (with IRMAA) + MA premium default`
+
+### Unit Tests: lib/schemas.test.ts (~6 tests)
+
+- `age 63 → passes validation (age-gate handled in UI, not schema)`
+- `age 71 → fails validation`
+- `coverage_type "cobra" → employer_holder not required`
+- `coverage_type "employer_group" → employer_holder required`
+- `retiring_soon false → retirement_date not required`
+- `retiring_soon true → retirement_date required`
+
+### Unit Tests: lib/storage.test.ts (~4 tests)
+
+- `fresh visit (no localStorage) → returns null`
+- `save + retrieve → returns saved data`
+- `data older than 30 days → returns null (expired)`
+- `localStorage unavailable (mock throw) → graceful fallback, no crash`
+- `localStorage contains corrupted JSON → falls back to fresh state, no crash`
+
+### E2E Tests: e2e/ (~3 tests)
+
+- **Happy path (employer):** Welcome → fill all 6 input steps with employer coverage, high income → verify Scenario A tagged as best fit → verify memo has correct action items → verify print dialog opens
+- **COBRA path:** Welcome → fill with COBRA coverage → verify penalty warning appears in scenarios → verify Scenario A NOT recommended → verify memo includes "enroll in Part B immediately"
+- **Unsupported state:** Welcome → select state outside curated list → verify notice appears → verify Scenario B shows "estimates unavailable" with SHIP link → verify memo includes caveat
+
+### Test Data
+
+Use a fixtures file (`lib/test-fixtures.ts`) with realistic input sets:
+- `employerHighIncome`: age 65, employer coverage, $250K income, not retiring
+- `cobraUser`: age 65, COBRA, $210K income, retiring in 6 months
+- `unsupportedState`: age 65, employer coverage, state not in curated list
 
 ## Open Questions
 
@@ -250,6 +435,22 @@ Then: find 2 more people turning 65 in 2026 (your parents likely know several). 
 - You immediately agreed to revise Premise 4 when Codex challenged it. That's good founder instinct — you're not attached to being right, you're attached to building the right thing.
 - You described your parents' situation with real specificity — income bracket, employment status, provider preferences. You didn't say "people turning 65." You know this user because you're watching them struggle.
 
+## NOT in scope (deferred)
+
+- Full design system (typography, color tokens, spacing scale) — recommend `/design-consultation` before implementation
+- Motion system — only step transitions specified (150ms slide); no scroll-linked or hover animations
+- User journey emotional arc mapping — the IRMAA shock at Step 4 and cognitive load at Step 7 are mitigated (varied educational formats, comparison table) but not fully storyboarded
+- AI slop audit — no visual design exists yet to audit; relevant after implementation
+- Responsive behavior beyond the two-zone layout — tablet breakpoints, landscape orientation not specified
+- Print layout specification for the decision memo — CSS print styles noted but no detailed layout
+- Progressive disclosure on scenario comparison — defaulting to full table; collapsible rows are v2
+
+## What already exists
+
+- No DESIGN.md design system (the plan IS the DESIGN.md)
+- No existing UI patterns, components, or code — greenfield
+- Wireframe at `/tmp/gstack-sketch-1774286228.html` (local only, not committed)
+
 ## Reviewer Concerns (unresolved after 3 review rounds)
 
 These are edge cases and refinements flagged by adversarial review that should be addressed during implementation:
@@ -259,3 +460,15 @@ These are edge cases and refinements flagged by adversarial review that should b
 3. **Unsupported states:** If a user selects a state outside the curated 10-15 for Medigap data, show a fallback message directing them to SHIP rather than showing no data.
 4. **Wizard state management:** Back/forward navigation, localStorage persistence across refresh, and conditional field behavior when earlier answers change are unspecified. Define during implementation.
 5. **Medigap data is a blocking dependency:** The manual data curation for 10-15 states must be completed before the scenario step can be built and tested. Flag this as a pre-build task.
+
+## GSTACK REVIEW REPORT
+
+| Review | Trigger | Why | Runs | Status | Findings |
+|--------|---------|-----|------|--------|----------|
+| CEO Review | `/plan-ceo-review` | Scope & strategy | 0 | — | — |
+| Codex Review | `/codex review` | Independent 2nd opinion | 0 | — | — |
+| Eng Review | `/plan-eng-review` | Architecture & tests (required) | 1 | CLEAR | 3 issues, 0 critical gaps |
+| Design Review | `/plan-design-review` | UI/UX gaps | 1 | 7/10 | score: 5/10 → 7/10, 5 decisions |
+
+- **UNRESOLVED:** 0 decisions across all reviews
+- **VERDICT:** ENG CLEARED — ready to implement. Design at 7/10 (recommend `/design-consultation` for full design system before build).
