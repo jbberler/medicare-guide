@@ -2,7 +2,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import userEvent from "@testing-library/user-event";
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -79,7 +78,7 @@ function makeResults() {
       scenario,
       { ...scenario, id: "B" as const, label: "Med + Medigap" },
       { ...scenario, id: "C" as const, label: "Advantage" },
-    ] as [typeof scenario, typeof scenario, typeof scenario],
+    ] as unknown as [typeof scenario, typeof scenario, typeof scenario],
     cobraAcaWarning: false,
     cobraAcaMessage: null,
     noTargetPersonaRedirect: false,

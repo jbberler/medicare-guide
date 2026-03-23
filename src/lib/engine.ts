@@ -140,8 +140,8 @@ export function computeScenarios(inputs: WizardInputs): ScenarioResults {
   // Determine tags via scenario ranking
   const hasEmployerCoverage = inputs.coverage_type === "employer_group";
   const employerLargeEnough = inputs.employer_size_20_plus === true;
-  const retiringSOOn =
-    inputs.retiring_soon || inputs.retiring_within_12_months;
+  // retiring_soon is the canonical retirement field (retiring_within_12_months was removed in Phase 4)
+  const retiringSOOn = inputs.retiring_soon;
 
   let tagA: ScenarioTag = null;
   let tagB: ScenarioTag = null;
@@ -186,9 +186,10 @@ export function computeScenarios(inputs: WizardInputs): ScenarioResults {
   }
   // else: no tag — situation has trade-offs in multiple directions
 
-  // Graceful redirect for non-target persona: no employer coverage AND base IRMAA
+  // Graceful redirect for non-target persona: no employer coverage AND base IRMAA.
+  // COBRA/ACA users are never redirected — they are highest-risk for late-enrollment penalty.
   const noTargetPersonaRedirect =
-    !hasEmployerCoverage && inputs.irmaa_bracket === "base";
+    !hasEmployerCoverage && !isCobraOrAca && inputs.irmaa_bracket === "base";
   const noTargetPersonaMessage = noTargetPersonaRedirect
     ? "Your situation is straightforward — enroll in Parts A & B during your Initial Enrollment Period, consider a Medigap plan, and contact a free SHIP counselor to confirm."
     : null;
@@ -224,10 +225,11 @@ export function computeScenarios(inputs: WizardInputs): ScenarioResults {
     id: "B",
     label: "Original Medicare + Medigap",
     monthlyTotal: medigapUnavailable
-      ? irmaa.partBMonthly + irmaa.partDMonthly
+      // Part A premium applies whether or not Medigap is available; only Medigap is what's missing
+      ? partAMonthly + irmaa.partBMonthly + irmaa.partDMonthly
       : scenarioBMonthly,
     annualTotal: medigapUnavailable
-      ? (irmaa.partBMonthly + irmaa.partDMonthly) * 12
+      ? (partAMonthly + irmaa.partBMonthly + irmaa.partDMonthly) * 12
       : scenarioBMonthly * 12,
     tag: tagB,
     tagReason: tagReasonB,
@@ -238,7 +240,9 @@ export function computeScenarios(inputs: WizardInputs): ScenarioResults {
     partDMonthly: irmaa.partDMonthly,
     employerPremiumMonthly: 0,
     maMonthlyPremium: 0,
-    irmaaImpact: `Full — Part B $${irmaa.partBMonthly}/mo + Part D $${irmaa.partDMonthly}/mo surcharge`,
+    irmaaImpact: inputs.irmaa_bracket === "base"
+      ? `Standard Part B $${irmaa.partBMonthly}/mo — no IRMAA surcharge`
+      : `IRMAA — Part B $${irmaa.partBMonthly}/mo + Part D $${irmaa.partDMonthly}/mo above standard`,
     doctorFreedom: "Any Medicare-accepting doctor nationwide",
     penaltyRisk: "None if enrolling during Initial Enrollment Period or Special Enrollment Period",
     bestWhen: "Retiring soon, want broadest provider choice, value predictable costs",
@@ -261,7 +265,9 @@ export function computeScenarios(inputs: WizardInputs): ScenarioResults {
     partDMonthly: 0,
     employerPremiumMonthly: 0,
     maMonthlyPremium,
-    irmaaImpact: `Partial — Part B $${irmaa.partBMonthly}/mo surcharge; no Part D surcharge (bundled)`,
+    irmaaImpact: inputs.irmaa_bracket === "base"
+      ? `Standard Part B $${irmaa.partBMonthly}/mo — no IRMAA surcharge; Part D bundled in MA premium`
+      : `IRMAA — Part B $${irmaa.partBMonthly}/mo surcharge; no Part D surcharge (Part D bundled in MA)`,
     doctorFreedom: "Plan network only — verify your specific doctors are in-network",
     penaltyRisk: "None if enrolling during Initial Enrollment Period or Special Enrollment Period",
     bestWhen: "Lower premiums are priority, willing to accept network restrictions",

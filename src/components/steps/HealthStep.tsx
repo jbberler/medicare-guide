@@ -89,15 +89,15 @@ export function HealthStep() {
       />
 
       <div className="space-y-5">
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-gray-700">
+        <fieldset className="flex flex-col gap-2 border-0 p-0 m-0">
+          <legend className="text-sm font-medium text-gray-700">
             How would you describe your overall health?
-          </label>
-          <div className="flex flex-col gap-2">
+          </legend>
+          <div className="flex flex-col gap-2 mt-1">
             {HEALTH_STATUS_OPTIONS.map((status) => (
               <label
                 key={status}
-                className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors min-h-[44px]"
                 style={{
                   borderColor:
                     healthStatus === status ? "#4f46e5" : "#d1d5db",
@@ -127,17 +127,17 @@ export function HealthStep() {
               {errors.health_status}
             </p>
           )}
-        </div>
+        </fieldset>
 
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-gray-700">
+        <fieldset className="flex flex-col gap-2 border-0 p-0 m-0">
+          <legend className="text-sm font-medium text-gray-700">
             What best describes your medication use?
-          </label>
-          <div className="flex flex-col gap-2">
+          </legend>
+          <div className="flex flex-col gap-2 mt-1">
             {MEDICATIONS_LEVEL_OPTIONS.map((level) => (
               <label
                 key={level}
-                className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors min-h-[44px]"
                 style={{
                   borderColor:
                     medicationsLevel === level ? "#4f46e5" : "#d1d5db",
@@ -170,12 +170,12 @@ export function HealthStep() {
               {errors.medications_level}
             </p>
           )}
-        </div>
+        </fieldset>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">
+        <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+          <legend className="text-sm font-medium text-gray-700">
             Are specific doctors or specialists important to you?
-          </label>
+          </legend>
           <div className="flex gap-6 mt-1">
             {[
               { value: "true", label: "Yes" },
@@ -183,7 +183,7 @@ export function HealthStep() {
             ].map((opt) => (
               <label
                 key={opt.value}
-                className="flex items-center gap-2 cursor-pointer"
+                className="flex items-center gap-2 cursor-pointer min-h-[44px]"
               >
                 <input
                   type="radio"
@@ -208,7 +208,7 @@ export function HealthStep() {
               {errors.has_specific_doctors}
             </p>
           )}
-        </div>
+        </fieldset>
       </div>
 
       <div className="flex justify-between pt-2">

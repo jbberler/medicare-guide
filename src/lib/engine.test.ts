@@ -15,7 +15,6 @@ const baseInputs: WizardInputs = {
   employer_size_20_plus: true,
   employer_premium: 500,
   irmaa_bracket: "tier1",
-  retiring_within_12_months: false,
   health_status: "healthy",
   medications_level: "none",
   has_specific_doctors: false,

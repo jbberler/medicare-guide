@@ -1,6 +1,6 @@
 # TODOS
 
-## Engine: Part A Work-Quarter Precision
+## ~~Engine: Part A Work-Quarter Precision~~ (deferred — see below)
 
 **What:** `has_40_credits` is a boolean, but Medicare Part A has two premium tiers for people without 40 credits: $284/mo (30–39 quarters) and $518/mo (<30 quarters). The engine currently always uses $518/mo when `has_40_credits = false`.
 
@@ -169,6 +169,62 @@
 ---
 
 ## Completed
+
+### Engine: COBRA + Base IRMAA Conflicting Signals
+
+**Completed:** Phase 4 (2026-03-23)
+
+Fixed in `engine.ts`: `noTargetPersonaRedirect` now gates on `!isCobraOrAca` so COBRA/ACA users are never redirected as "straightforward."
+
+---
+
+### Engine: Scenario B Part A Cost Undercount
+
+**Completed:** Phase 4 (2026-03-23)
+
+Fixed in `engine.ts`: Scenario B `monthlyTotal`/`annualTotal` when `medigapUnavailable` now includes `partAMonthly`.
+
+---
+
+### Engine: IRMAA Base Bracket Label Mismatch
+
+**Completed:** Phase 4 (2026-03-23)
+
+Fixed in `engine.ts`: Scenario B and C `irmaaImpact` strings now correctly say "Standard Part B — no IRMAA surcharge" for the base bracket, and "IRMAA surcharge" only for above-base brackets.
+
+---
+
+### Schema: employer_premium Required for employer_group
+
+**Completed:** Phase 4 (2026-03-23)
+
+Added `superRefine` to `WizardInputsSchema` requiring `employer_premium` when `coverage_type === "employer_group"`.
+
+---
+
+### Schema: Reconcile Duplicate Retirement Fields
+
+**Completed:** Phase 4 (2026-03-23)
+
+Removed `retiring_within_12_months` from `schemas.ts`. `IncomeStep` now sets `retiring_soon` (canonical field). `MemoStep` and `engine.ts` updated accordingly.
+
+---
+
+### Engine: Retirement Boolean OR-Gate Lock-In
+
+**Completed:** Phase 4 (2026-03-23)
+
+Resolved by removing `retiring_within_12_months` — engine now uses only `inputs.retiring_soon`.
+
+---
+
+### Accessibility: fieldset/legend for Radio Groups
+
+**Completed:** Phase 4 (2026-03-23)
+
+All radio groups in Steps 2–6 (HouseholdStep, InsuranceStep, IncomeStep, HealthStep, TimelineStep) now use `<fieldset>/<legend>` instead of `<div>/<label>`. Addresses WCAG 2.1 SC 1.3.1.
+
+---
 
 ### Blocking: Medigap Data Curation
 

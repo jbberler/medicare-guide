@@ -82,10 +82,10 @@ export function TimelineStep() {
       </div>
 
       <div className="space-y-4">
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">
+        <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+          <legend className="text-sm font-medium text-gray-700">
             Are you planning to retire within the next 12 months?
-          </label>
+          </legend>
           <div className="flex gap-6 mt-1">
             {[
               { value: "true", label: "Yes" },
@@ -93,7 +93,7 @@ export function TimelineStep() {
             ].map((opt) => (
               <label
                 key={opt.value}
-                className="flex items-center gap-2 cursor-pointer"
+                className="flex items-center gap-2 cursor-pointer min-h-[44px]"
               >
                 <input
                   type="radio"
@@ -118,7 +118,7 @@ export function TimelineStep() {
               {errors.retiring_soon}
             </p>
           )}
-        </div>
+        </fieldset>
 
         {isRetiringSoon && (
           <Input

@@ -2,6 +2,21 @@
 
 All notable changes to Medicare Guidepost will be documented in this file.
 
+## [0.1.7.0] - 2026-03-23
+
+### Added
+- Security headers in `next.config.ts`: `Content-Security-Policy`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` (camera/mic/geo blocked)
+
+### Fixed
+- **P1 — Engine: COBRA + Base IRMAA conflict** (`engine.ts`): `noTargetPersonaRedirect` now excludes COBRA/ACA users — they are highest-risk for late-enrollment penalty and should never see the "this may be simple" redirect
+- **P1 — Engine: Scenario B Part A undercount** (`engine.ts`): When Medigap data is unavailable, Scenario B `monthlyTotal`/`annualTotal` now correctly includes `partAMonthly` (previously dropped up to $518/mo)
+- **P2 — Engine: IRMAA base bracket label** (`engine.ts`): `irmaaImpact` in Scenarios B and C now shows "Standard Part B — no IRMAA surcharge" at the base bracket instead of incorrectly labeling the standard $185 premium as a surcharge
+- **P2 — Schema: Duplicate retirement fields** (`schemas.ts`, `IncomeStep.tsx`, `MemoStep.tsx`, `engine.ts`): Removed `retiring_within_12_months` — `retiring_soon` is now the single canonical field; IncomeStep and TimelineStep both write to `retiring_soon`
+- **P2 — Schema: `employer_premium` validation** (`schemas.ts`): Added `superRefine` requiring `employer_premium` when `coverage_type === "employer_group"` (belt-and-suspenders; UI also enforces)
+- **P3 — Accessibility: `<fieldset>/<legend>` for radio groups** (Steps 2–6): All radio button groups now use `<fieldset>/<legend>` instead of `<div>/<label>`. Fixes WCAG 2.1 SC 1.3.1 (Info and Relationships) — screen readers now correctly announce the group question when focus moves to individual radio options
+- **Accessibility: touch targets** (Steps 2–6): All radio button labels now have `min-h-[44px]` for WCAG 2.1 AA touch target compliance on mobile
+- **Test cleanup** (`steps.test.tsx`): Removed unused `userEvent` import; fixed spurious tuple type cast
+
 ## [0.1.6.0] - 2026-03-23
 
 ### Added

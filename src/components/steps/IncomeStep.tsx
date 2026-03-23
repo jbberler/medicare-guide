@@ -35,10 +35,8 @@ export function IncomeStep() {
   const [irmaaBracket, setIrmaaBracket] = useState<string>(
     inputs.irmaa_bracket ?? ""
   );
-  const [retiringWithin12, setRetiringWithin12] = useState<string>(
-    inputs.retiring_within_12_months !== undefined
-      ? String(inputs.retiring_within_12_months)
-      : ""
+  const [retiringSoon, setRetiringSoon] = useState<string>(
+    inputs.retiring_soon !== undefined ? String(inputs.retiring_soon) : ""
   );
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -47,14 +45,14 @@ export function IncomeStep() {
   function validate(): boolean {
     const errs: Record<string, string> = {};
     if (!irmaaBracket) errs.irmaa_bracket = VALIDATION_MSG;
-    if (retiringWithin12 === "") errs.retiring_within_12_months = VALIDATION_MSG;
+    if (retiringSoon === "") errs.retiring_soon = VALIDATION_MSG;
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
 
   function commitAndAdvance() {
     setField("irmaa_bracket", irmaaBracket as IrmaaBracket);
-    setField("retiring_within_12_months", retiringWithin12 === "true");
+    setField("retiring_soon", retiringSoon === "true");
     advance();
   }
 
@@ -72,7 +70,7 @@ export function IncomeStep() {
     commitAndAdvance();
   }
 
-  const canContinue = irmaaBracket !== "" && retiringWithin12 !== "";
+  const canContinue = irmaaBracket !== "" && retiringSoon !== "";
 
   if (showRedirectInterstitial) {
     return (
@@ -129,30 +127,27 @@ export function IncomeStep() {
           error={errors.irmaa_bracket}
         />
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">
+        <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+          <legend className="text-sm font-medium text-gray-700">
             Are you planning to retire within the next 12 months?
-          </label>
-          <div className="flex gap-6">
+          </legend>
+          <div className="flex gap-6 mt-1">
             {[
               { value: "true", label: "Yes" },
               { value: "false", label: "No" },
             ].map((opt) => (
               <label
                 key={opt.value}
-                className="flex items-center gap-2 cursor-pointer"
+                className="flex items-center gap-2 cursor-pointer min-h-[44px]"
               >
                 <input
                   type="radio"
-                  name="retiring_within_12_months"
+                  name="retiring_soon_income"
                   value={opt.value}
-                  checked={retiringWithin12 === opt.value}
+                  checked={retiringSoon === opt.value}
                   onChange={() => {
-                    setRetiringWithin12(opt.value);
-                    setErrors((prev) => ({
-                      ...prev,
-                      retiring_within_12_months: "",
-                    }));
+                    setRetiringSoon(opt.value);
+                    setErrors((prev) => ({ ...prev, retiring_soon: "" }));
                   }}
                   className="accent-indigo-600"
                 />
@@ -160,12 +155,12 @@ export function IncomeStep() {
               </label>
             ))}
           </div>
-          {errors.retiring_within_12_months && (
+          {errors.retiring_soon && (
             <p className="text-xs text-red-600" role="alert">
-              {errors.retiring_within_12_months}
+              {errors.retiring_soon}
             </p>
           )}
-        </div>
+        </fieldset>
       </div>
 
       <div className="flex justify-between pt-2">

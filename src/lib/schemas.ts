@@ -73,7 +73,6 @@ export const WizardInputsBaseSchema = z.object({
 
     // Step 4 (Income)
     irmaa_bracket: z.enum(IRMAA_BRACKETS),
-    retiring_within_12_months: z.boolean(),
 
     // Step 5 (Health)
     health_status: z.enum(HEALTH_STATUS_OPTIONS),
@@ -103,6 +102,15 @@ export const WizardInputsSchema = WizardInputsBaseSchema.superRefine((data, ctx)
           path: ["employer_size_20_plus"],
         });
       }
+    }
+
+    // employer_premium required when coverage_type == "employer_group" (belt-and-suspenders; UI enforces it)
+    if (data.coverage_type === "employer_group" && data.employer_premium === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "employer_premium is required when coverage type is employer group",
+        path: ["employer_premium"],
+      });
     }
 
     // retirement_date required if retiring_soon == true

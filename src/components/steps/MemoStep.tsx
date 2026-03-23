@@ -50,7 +50,7 @@ function situationSummary(inputs: WizardInputs): string {
   const state = inputs.state;
   const coverage = coverageLabel(inputs);
   const income = irmaaLabel(inputs.irmaa_bracket);
-  const retiring = inputs.retiring_within_12_months
+  const retiring = inputs.retiring_soon
     ? " planning to retire within 12 months"
     : " not planning to retire soon";
 
@@ -163,7 +163,7 @@ function PrintableMemo({ inputs, results }: MemoProps) {
   // Show the general rule so they can apply it to their situation.
   const iepNote =
     "Your Initial Enrollment Period runs from 3 months before to 3 months after the month you turn 65 (7 months total).";
-  const sepNote = inputs.retiring_within_12_months
+  const sepNote = inputs.retiring_soon
     ? "Special Enrollment Period: up to 8 months after employer coverage ends. Enroll in Part B before this window closes to avoid a permanent penalty."
     : null;
 
