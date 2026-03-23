@@ -461,7 +461,7 @@ export function MemoStep() {
         </div>
         <button
           onClick={() => goBack()}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-4 py-2 min-h-[44px] text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
         >
           ← Go back
         </button>
@@ -482,13 +482,13 @@ export function MemoStep() {
         <div className="flex gap-3">
           <button
             onClick={handleConfirmPrinted}
-            className="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-5 py-2.5 min-h-[44px] text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Yes, I saved it
           </button>
           <button
             onClick={() => setAwaitingConfirmation(false)}
-            className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-5 py-2.5 min-h-[44px] text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           >
             No, go back
           </button>
@@ -583,7 +583,7 @@ export function MemoStep() {
         <div className="flex flex-col gap-3">
           <button
             onClick={handlePrint}
-            className="flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors"
+            className="flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] text-base font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors"
           >
             <span aria-hidden="true">🖨</span>
             Print / Save as PDF
@@ -610,7 +610,7 @@ export function MemoStep() {
           {!showFallback && (
             <button
               onClick={() => setShowFallback(true)}
-              className="text-sm text-gray-400 hover:text-gray-600 transition-colors text-center"
+              className="text-sm text-gray-400 hover:text-gray-600 transition-colors text-center min-h-[44px]"
             >
               Can&apos;t print?
             </button>

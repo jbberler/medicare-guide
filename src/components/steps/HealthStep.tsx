@@ -114,7 +114,7 @@ export function HealthStep() {
                     setHealthStatus(status);
                     setErrors((prev) => ({ ...prev, health_status: "" }));
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-800">
                   {HEALTH_STATUS_LABELS[status]}
@@ -157,7 +157,7 @@ export function HealthStep() {
                       medications_level: "",
                     }));
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-800">
                   {MEDICATIONS_LEVEL_LABELS[level]}
@@ -197,7 +197,7 @@ export function HealthStep() {
                       has_specific_doctors: "",
                     }));
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-700">{opt.label}</span>
               </label>

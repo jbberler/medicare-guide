@@ -158,7 +158,7 @@ export function HouseholdStep() {
                     setSex(opt.value);
                     setErrors((prev) => ({ ...prev, sex: "" }));
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-700">{opt.label}</span>
               </label>
@@ -188,7 +188,7 @@ export function HouseholdStep() {
                     setErrors((prev) => ({ ...prev, marital_status: "" }));
                     if (opt === "single") setSpouseAge("");
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-700 capitalize">{opt}</span>
               </label>
@@ -254,7 +254,7 @@ export function HouseholdStep() {
                     setHas40Credits(opt.value);
                     setErrors((prev) => ({ ...prev, has_40_credits: "" }));
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-700">{opt.label}</span>
               </label>

@@ -149,7 +149,7 @@ export function IncomeStep() {
                     setRetiringSoon(opt.value);
                     setErrors((prev) => ({ ...prev, retiring_soon: "" }));
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-700">{opt.label}</span>
               </label>

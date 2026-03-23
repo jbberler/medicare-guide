@@ -128,7 +128,7 @@ export function InsuranceStep() {
                       setEmployerPremium("");
                     }
                   }}
-                  className="accent-indigo-600"
+                  className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                 />
                 <span className="text-sm text-gray-800">
                   {COVERAGE_TYPE_LABELS[type]}
@@ -187,7 +187,7 @@ export function InsuranceStep() {
                           employer_size_20_plus: "",
                         }));
                       }}
-                      className="accent-indigo-600"
+                      className="accent-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
                     />
                     <span className="text-sm text-gray-700">{opt.label}</span>
                   </label>
