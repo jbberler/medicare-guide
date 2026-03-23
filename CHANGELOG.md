@@ -2,6 +2,22 @@
 
 All notable changes to Medicare Guidepost will be documented in this file.
 
+## [0.1.4.0] - 2026-03-23
+
+### Added
+- Input steps 2–6 (`src/components/steps/`):
+  - `HouseholdStep` — age (62–70), sex, marital status, state, work credits, conditional spouse age; age-gate interstitial for users aged 62–64 (planning ahead notice)
+  - `InsuranceStep` — coverage type selector; conditional employer sub-form (holder, employer size, optional monthly premium with NaN-safe parsing)
+  - `IncomeStep` — IRMAA bracket selector (6 tiers, 2023 tax year); graceful redirect interstitial for non-employer + base-bracket users (with guard preventing premature fire when upstream step is incomplete)
+  - `HealthStep` — overall health status, medication use level, doctor/specialist preference; Original Medicare vs Medicare Advantage comparison snippet
+  - `TimelineStep` — SEP deadline education strip; conditional expected retirement date; optional employer coverage end date
+
+### Fixed
+- `HouseholdStep`: age input now validates range (62–70) with a human-readable message — previously only checked for `NaN`
+- `InsuranceStep`: employer premium now ignores whitespace-only strings (`" "`) to prevent `$0/mo` being silently stored as NaN
+- `IncomeStep`: graceful redirect guard now requires `coverage_type` to be set before checking — prevents spurious redirect when the Insurance step was never completed
+- `HouseholdStep`: age-gate "Continue exploring" button now uses `debounce={300}` (number) to match the `Button` component API
+
 ## [0.1.3.0] - 2026-03-23
 
 ### Added

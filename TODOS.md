@@ -85,3 +85,35 @@
 **Effort:** ~2-3 hours human research. Partially compressible with AI (can search for published rate comparisons).
 
 **Depends on:** Nothing. Can start immediately. Must complete before Step 7 scenarios can be built and tested.
+
+---
+
+## Schema: Reconcile Duplicate Retirement Fields
+
+**What:** `TimelineStep` captures `retiring_soon` (boolean) while `IncomeStep` captures `retiring_within_12_months` (boolean). Both ask "are you retiring within the next 12 months?" These are semantically identical fields stored under two different keys.
+
+**Fix:** In the integration pass (Phase 3), pick one canonical field (suggest `retiring_soon`) and remove the duplicate. Update `IncomeStep` to read from the same field rather than storing a second value.
+
+**Impact:** Engine sees two independent flags that should always agree; if they ever diverge (e.g., user goes back and changes one), the engine may produce inconsistent output.
+
+**Effort:** ~15 min CC
+
+**Priority:** P2 (no user-visible bug until integration; fix in Phase 3)
+
+**Noticed by:** /review on jbberler/oslo-phase2-track-c (2026-03-23)
+
+---
+
+## Accessibility: fieldset/legend for Radio Groups
+
+**What:** All radio button groups in Steps 2–6 are wrapped in plain `<div>` elements with a `<label>` heading. Screen readers need a `<fieldset>` + `<legend>` to associate the group label with the individual radio inputs.
+
+**Fix:** In Phase 4 accessibility pass, replace the `<div>/<label>` pattern with `<fieldset>/<legend>` for each radio group in HouseholdStep, InsuranceStep, IncomeStep, HealthStep, and TimelineStep.
+
+**Impact:** Screen readers may not announce the group question when focus moves to individual radio options; affects WCAG 2.1 SC 1.3.1 (Info and Relationships).
+
+**Effort:** ~20 min CC per step (mechanical find-and-replace)
+
+**Priority:** P3 (fix in Phase 4 accessibility pass before public launch)
+
+**Noticed by:** /review on jbberler/oslo-phase2-track-c (2026-03-23)
