@@ -61,8 +61,10 @@ export function IncomeStep() {
 
     // Graceful redirect check — only for users who explicitly indicated non-employer coverage.
     // Guard: coverage_type must be set (not undefined from a skipped step).
+    // COBRA/ACA users are never redirected — they are highest-risk for late-enrollment penalty.
     const coverageType = inputs.coverage_type;
-    if (coverageType && coverageType !== "employer_group" && irmaaBracket === "base") {
+    const isCobraOrAca = coverageType === "cobra" || coverageType === "aca";
+    if (coverageType && coverageType !== "employer_group" && !isCobraOrAca && irmaaBracket === "base") {
       setShowRedirectInterstitial(true);
       return;
     }
