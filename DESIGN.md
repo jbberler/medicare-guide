@@ -451,24 +451,101 @@ Then: find 2 more people turning 65 in 2026 (your parents likely know several). 
 - No existing UI patterns, components, or code — greenfield
 - Wireframe at `/tmp/gstack-sketch-1774286228.html` (local only, not committed)
 
-## Reviewer Concerns (unresolved after 3 review rounds)
+## Reviewer Concerns — Resolution Status
 
-These are edge cases and refinements flagged by adversarial review that should be addressed during implementation:
+All 5 concerns from the prior adversarial review are now resolved or tracked:
 
-1. **COBRA/ACA handling:** The rules engine collects these as coverage types but has no branching logic. COBRA is NOT creditable coverage for penalty avoidance — this needs explicit handling and a penalty-risk warning in the scenario output.
-2. **Work credits:** Part A is only premium-free with 40+ quarters. The rules engine has no input for this. Add a yes/no question or assume 40+ credits with a disclaimer.
-3. **Unsupported states:** If a user selects a state outside the curated 10-15 for Medigap data, show a fallback message directing them to SHIP rather than showing no data.
-4. **Wizard state management:** Back/forward navigation, localStorage persistence across refresh, and conditional field behavior when earlier answers change are unspecified. Define during implementation.
-5. **Medigap data is a blocking dependency:** The manual data curation for 10-15 states must be completed before the scenario step can be built and tested. Flag this as a pre-build task.
+| # | Concern | Status | Resolution |
+|---|---------|--------|-----------|
+| 1 | COBRA/ACA handling | ✓ RESOLVED | Explicit COBRA/ACA gate in rules engine above with penalty warning |
+| 2 | Work credits | ✓ RESOLVED | Add `has_40_credits: boolean` to Step 2 (Household) + Zod schema + rules engine (see below) |
+| 3 | Unsupported states | ✓ RESOLVED | State notice on selection + "estimates unavailable" inline in Scenario B card with SHIP link |
+| 4 | Wizard state management | ✓ RESOLVED | React Context + useReducer + localStorage (see CEO Review Decisions below) |
+| 5 | Medigap data (blocking) | TRACKED | In TODOS.md — must complete before Step 7 can be built and tested |
+
+## CEO Review Decisions
+
+Decisions locked during `/plan-ceo-review` on 2026-03-23. Mode: HOLD SCOPE.
+
+### Architecture
+
+**Wizard state management:**
+- React Context + useReducer + localStorage. Steps are Next.js App Router routes (`/steps/1` through `/steps/8`).
+- Context is the source of truth — steps render from context state, never from route cache.
+- Auto-save all inputs to localStorage on each step completion. On return visit: resume banner with "Continue" / "Start over" options. Data expires after 30 days and is cleared after memo print/download.
+
+**Conditional invalidation on back-navigation:**
+- When a user goes back and changes an upstream answer, clear dependent downstream fields and show a brief "answers updated" notice.
+- Example: changing "employer coverage: yes → no" clears Step 6 (Timeline) fields.
+
+**localStorage error handling** (`lib/storage.ts`):
+- Wrap all localStorage calls in a try/catch utility.
+- Quota exceeded → toast "Storage full — progress may not be saved between sessions", retry once.
+- Private browsing / disabled → banner on app load: "Private browsing detected — your progress won't be saved if you close this tab." Wizard still works in-memory.
+- Corrupted JSON → reset to empty state, show "Your saved progress was corrupted and has been cleared."
+
+**Navigation:**
+- Debounce Next/Back buttons 300ms to prevent double-click skipping (target users are 64-66).
+- Keyboard: Enter advances, Escape goes back (per design doc — noted here for implementation).
+
+### Rules Engine Additions
+
+**Work credits field:**
+- Add `has_40_credits: boolean` to Step 2 (Household): "Have you or your spouse worked 10+ years and paid Medicare taxes?"
+- Add to Zod schema in `lib/schemas.ts`.
+- Rules engine: if `has_40_credits = false`, Scenario A shows the 2026 Part A premium ($280/mo with 30-39 quarters, $518/mo with fewer) instead of $0. Add disclaimer: "Your Part A premium depends on your exact work history. Verify at ssa.gov."
+- Unit tests to add: `has_40_credits false → Part A premium shown`, `has_40_credits true → Part A is $0`.
+
+**Defensive lookups:**
+- Every rules engine table lookup must have a typed fallback.
+- For unsupported Medigap states: return `null`, render "Medigap estimate unavailable for [State] — get a free quote at shiphelp.org" inline in Scenario B. Card remains visible with all other fields.
+- For IRMAA lookups (complete CMS data): assert key exists, throw a named `LookupError` if missing. Catch at the scenario rendering layer: show "Unable to calculate — please verify your inputs." (Should never trigger with valid Zod-validated inputs.)
+
+### UX Decisions
+
+**Graceful redirect for non-target users:**
+- After Step 4 (Income), if `no employer coverage AND no IRMAA bracket`, show a redirect interstitial:
+  - "Your situation is straightforward — here's what we recommend" with a brief summary (enroll in Parts A+B during IEP, consider Medigap, SHIP link).
+  - Button: "Continue to full analysis anyway" (escape hatch).
+  - If user continues: Scenario A shows "N/A — no employer coverage" instead of cost figures.
+
+**IRMAA reassurance (Step 4):**
+- Add one sentence at the bottom of the Step 4 IRMAA educational panel: *"You'll see exactly how this affects your options in Step 7 — and there may be a path that avoids this entirely."*
+- Rationale: the IRMAA cost reveal ($340-$594/mo vs $185/mo) is a shock moment for the target persona. The forward-reference prevents abandonment without changing the educational content.
+
+**Artificial loading delay (Step 7):**
+- The "Analyzing your situation..." 2-second interstitial before Step 7 is an intentional trust mechanism, not real async work.
+- Implement as `setTimeout(2000)`. Add a code comment: `// Intentional delay — instant results feel like templates. This signals personalization.`
+- Do not remove thinking it is a bug.
+
+### Security
+
+- No analytics capturing form field values — income bracket and health status are sensitive.
+- CSP headers: block inline scripts (except React hydration), no external script loading.
+- All personalization is client-side only — no SSR of user data.
+- SRI on any CDN-loaded assets (fonts, etc.).
+
+### Observability
+
+- No third-party error tracking for v1 (privacy-first — the "no data leaves your browser" promise).
+- Add `console.error` in all defensive catch blocks for developer debugging.
+- App footer: "Rates current for 2026 · Last updated March 2026" — makes data staleness visible to users.
+- Post-MVP: add Sentry with `beforeSend` PII filtering if user base grows beyond known users.
+
+### Data & Deployment
+
+- Rate data (IRMAA, Medigap, Part B/D) lives in `src/data/*.json` in the repo for v1.
+- Annual update process is tracked in TODOS.md for the October 2026 rate season.
+- Vercel deployment: instant rollback available. No migrations. Deploy = publish static files.
 
 ## GSTACK REVIEW REPORT
 
 | Review | Trigger | Why | Runs | Status | Findings |
 |--------|---------|-----|------|--------|----------|
-| CEO Review | `/plan-ceo-review` | Scope & strategy | 0 | — | — |
+| CEO Review | `/plan-ceo-review` | Scope & strategy | 1 | CLEAR | mode: HOLD_SCOPE, 0 critical gaps, 5 reviewer concerns resolved |
 | Codex Review | `/codex review` | Independent 2nd opinion | 0 | — | — |
 | Eng Review | `/plan-eng-review` | Architecture & tests (required) | 1 | CLEAR | 3 issues, 0 critical gaps |
 | Design Review | `/plan-design-review` | UI/UX gaps | 1 | 7/10 | score: 5/10 → 7/10, 5 decisions |
 
 - **UNRESOLVED:** 0 decisions across all reviews
-- **VERDICT:** ENG CLEARED — ready to implement. Design at 7/10 (recommend `/design-consultation` for full design system before build).
+- **VERDICT:** CEO + ENG CLEARED — ready to implement. Design at 7/10 (recommend `/design-consultation` for full design system before build).
