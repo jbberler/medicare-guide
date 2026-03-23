@@ -4,8 +4,8 @@ Generated 2026-03-23. Based on DESIGN.md (CEO + Eng reviewed, CLEARED).
 
 ## Prerequisites (must complete before any parallel work)
 
-- [ ] **Medigap data curation** — compile Plan G median premiums for 10-15 states into `src/data/medigap-2026.json`. See TODOS.md. Blocks Step 7 only but best to have it ready.
-- [ ] **Scaffold Next.js app** — `npx create-next-app@latest . --typescript --tailwind --app --src-dir`. Add Zod, Vitest, Playwright. Commit the empty scaffold.
+- [x] **Medigap data curation** — compile Plan G median premiums for 10-15 states into `src/data/medigap-2026.json`. See TODOS.md. Blocks Step 7 only but best to have it ready.
+- [x] **Scaffold Next.js app** — `npx create-next-app@latest . --typescript --tailwind --app --src-dir`. Add Zod, Vitest, Playwright. Commit the empty scaffold.
 
 ---
 
@@ -14,18 +14,18 @@ Generated 2026-03-23. Based on DESIGN.md (CEO + Eng reviewed, CLEARED).
 Everything else depends on these. Build in order.
 
 ```
-[ ] 1A  Zod schemas (lib/schemas.ts)
+[x] 1A  Zod schemas (lib/schemas.ts)
         - WizardInputs type with all fields
         - has_40_credits, coverage_type enum, IRMAA bracket enum, state enum
         - Conditional requirements (retirement_date required if retiring_soon)
         - Export WizardInputs type for use everywhere
 
-[ ] 1B  Data files (src/data/)
+[x] 1B  Data files (src/data/)
         - irmaa-2026.json
         - partbd-2026.json
         - medigap-2026.json (needs Medigap data curation first)
 
-[ ] 1C  Rules engine (lib/engine.ts + engine.test.ts)
+[x] 1C  Rules engine (lib/engine.ts + engine.test.ts)
         - Pure function: WizardInputs → ScenarioResults
         - COBRA/ACA gate
         - IRMAA + Medigap lookups with defensive fallbacks + LookupError
@@ -35,14 +35,14 @@ Everything else depends on these. Build in order.
         Depends on: 1A, 1B
         ~22 unit tests in engine.test.ts
 
-[ ] 1D  localStorage utility (lib/storage.ts + storage.test.ts)
+[x] 1D  localStorage utility (lib/storage.ts + storage.test.ts)
         - save/load/clear/expiry helpers
         - try/catch wrapper: quota exceeded, private browsing, corrupted JSON
         - 30-day expiry
         ~5 unit tests
         Depends on: 1A (needs WizardInputs type)
 
-[ ] 1E  Wizard Context (components/wizard/WizardShell.tsx)
+[x] 1E  Wizard Context (components/wizard/WizardShell.tsx)
         - React Context + useReducer
         - State: currentStep, inputs (WizardInputs partial), completedSteps
         - Actions: SET_FIELD, ADVANCE, GO_BACK, RESET, HYDRATE_FROM_STORAGE
@@ -63,20 +63,20 @@ Once the schema, engine, storage, and context are in place, these four tracks ar
 ### Track A — UI Primitives & Shell (~20 min CC)
 
 ```
-[ ] 2A1  UI primitives (components/ui/)
+[x] 2A1  UI primitives (components/ui/)
          - Button.tsx (primary, secondary, ghost variants + disabled state + debounce prop)
          - Input.tsx (label, error message, helper text)
          - Select.tsx (label, options, error message)
          - Banner.tsx (info, warning, error variants — used for age gate, return-visit, private browsing)
 
-[ ] 2A2  App shell layout (app/layout.tsx + globals.css)
+[x] 2A2  App shell layout (app/layout.tsx + globals.css)
          - Two-zone layout: 280px fixed left rail + fluid main pane (desktop ≥768px)
          - Single-column layout (mobile <768px)
          - Tailwind base styles, global CSS
          - CSS @media print styles (hidden nav/rail, full-width content)
          - "Rates current for 2026 · Last updated March 2026" footer
 
-[ ] 2A3  Wizard navigation components
+[x] 2A3  Wizard navigation components
          - ProgressRail.tsx — step list, green checkmarks for completed, running summary panel
          - StepNav.tsx — Back/Continue buttons, debounce 300ms, Enter/Escape keyboard handlers,
                          forward button disabled until validation passes
@@ -107,14 +107,14 @@ Once the schema, engine, storage, and context are in place, these four tracks ar
 Can build all 5 steps in parallel. Each step is an isolated form component that reads from and writes to WizardContext. Each follows the teach-then-ask pattern: educational component on top, inputs below.
 
 ```
-[ ] 2C1  HouseholdStep.tsx (Step 2)
+[x] 2C1  HouseholdStep.tsx (Step 2)
          Inputs: age, spouse_age, sex (Male/Female/Prefer not to say), marital_status, state
          Education: RuleSummary (why age + state matter)
          Extra: has_40_credits boolean question
          Age gate: if age 62-64, replace step with interstitial (continue + persistent banner, or exit)
          Depends on: 2A1, 2B1, WizardContext (Phase 1)
 
-[ ] 2C2  InsuranceStep.tsx (Step 3)
+[x] 2C2  InsuranceStep.tsx (Step 3)
          Inputs: coverage_type enum, employer_holder (conditional), employer_size (conditional),
                  employer_premium (conditional)
          Education: RuleSummary (MSP rules, employer size threshold)
@@ -122,7 +122,7 @@ Can build all 5 steps in parallel. Each step is an isolated form component that 
                              coverage_type == "employer_group"
          Depends on: 2A1, 2B1, WizardContext
 
-[ ] 2C3  IncomeStep.tsx (Step 4)
+[x] 2C3  IncomeStep.tsx (Step 4)
          Inputs: irmaa_bracket dropdown, retiring_within_12_months boolean
          Education: NumberExample (IRMAA calculation with 2026 numbers)
          Extra: reassurance sentence at bottom of educational panel
@@ -132,12 +132,12 @@ Can build all 5 steps in parallel. Each step is an isolated form component that 
                             show redirect interstitial (see CEO Review Decisions in DESIGN.md)
          Depends on: 2A1, 2B1, WizardContext
 
-[ ] 2C4  HealthStep.tsx (Step 5)
+[x] 2C4  HealthStep.tsx (Step 5)
          Inputs: health_status enum, medications_level enum, has_specific_doctors boolean
          Education: ComparisonSnippet (Original Medicare vs MA network access)
          Depends on: 2A1, 2B1, WizardContext
 
-[ ] 2C5  TimelineStep.tsx (Step 6)
+[x] 2C5  TimelineStep.tsx (Step 6)
          Inputs: retiring_soon boolean, retirement_date (conditional — required if retiring_soon)
                  employer_coverage_end_date
          Education: DeadlineStrip (SEP timeline, 8-month window, penalty risk)
@@ -151,14 +151,14 @@ Can build all 5 steps in parallel. Each step is an isolated form component that 
 Blocked on rules engine (Phase 1C) and Medigap data. Can start Step 8 immediately; Step 7 needs engine.
 
 ```
-[ ] 2D1  Scenario comparison components (components/scenarios/)
+[x] 2D1  Scenario comparison components (components/scenarios/)
          - ComparisonTable.tsx — desktop: rows × 3 columns, recommended scenario highlighted
          - ScenarioTabs.tsx — mobile: tab bar (A/B/C) + sticky cost comparison bar at bottom
          - RecommendationPanel.tsx — "Best fit" rationale box below table
          All take ScenarioResults as props (output of engine.ts). Pure display.
          Depends on: Phase 1C (engine.ts types), 2A1
 
-[ ] 2D2  ScenariosStep.tsx (Step 7)
+[x] 2D2  ScenariosStep.tsx (Step 7)
          - 2-second "Analyzing your situation..." loading interstitial with setTimeout
            (comment: intentional trust mechanism, not real async work)
          - Calls rules engine with WizardContext inputs
@@ -167,7 +167,7 @@ Blocked on rules engine (Phase 1C) and Medigap data. Can start Step 8 immediatel
          - Handles rules engine LookupError: shows "Something went wrong" with refresh prompt
          Depends on: 2D1, Phase 1C, WizardContext
 
-[ ] 2D3  MemoStep.tsx (Step 8) + decision memo layout
+[x] 2D3  MemoStep.tsx (Step 8) + decision memo layout
          - "Preparing your memo..." 1-second interstitial
          - "Your memo is ready" transitional screen with plain-language summary
          - Printable memo layout (CSS @media print): header, situation summary,

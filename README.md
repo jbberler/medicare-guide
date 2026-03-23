@@ -6,16 +6,16 @@ A guided decision tool that helps people turning 65 choose the right Medicare co
 
 ## Status
 
-`v0.1.5.0` — Phase 2 Tracks A–D complete (UI primitives, app shell, wizard nav, education components, input steps 2–6, scenario comparison + memo steps).
+`v0.1.6.0` — Phase 3 complete: Welcome screen, full step routing, and Playwright E2E tests. All 8 steps are wired and working end-to-end.
 
 | Phase | Status |
 |-------|--------|
 | Phase 1 — Foundation (schemas, engine, storage, WizardShell) | ✅ Merged |
 | Phase 2 Track A — UI primitives, app shell, wizard nav | ✅ Merged |
 | Phase 2 Track B — Education components | ✅ Merged |
-| Phase 2 Track C — Input steps 2–6 | ✅ PR open |
-| Phase 2 Track D — Output steps 7–8 + scenario components | ✅ PR open |
-| Phase 3 — Welcome screen + integration + E2E | 🔜 Pending |
+| Phase 2 Track C — Input steps 2–6 | ✅ Merged |
+| Phase 2 Track D — Output steps 7–8 + scenario components | ✅ Merged |
+| Phase 3 — Welcome screen + integration + E2E | ✅ Merged |
 | Phase 4 — Polish + accessibility + deploy | 🔜 Pending |
 
 ## What it does
@@ -40,7 +40,8 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Running tests
 
 ```bash
-npm test          # Vitest unit tests (75 tests)
+npm test          # Vitest unit tests (65 tests)
+npx playwright test   # Playwright E2E tests (3 scenarios)
 npm run build     # TypeScript + Next.js build check
 ```
 
@@ -53,7 +54,7 @@ src/
     ui/           # Button, Input, Select, Banner
     wizard/       # WizardShell (context), WizardAppShell (layout), ProgressRail, StepNav, MobileProgress
     education/    # RuleSummary, NumberExample, DeadlineStrip, ComparisonSnippet
-    steps/        # HouseholdStep–TimelineStep (Steps 2–6), ScenariosStep (7), MemoStep (8)
+    steps/        # WelcomeStep (1), HouseholdStep–TimelineStep (Steps 2–6), ScenariosStep (7), MemoStep (8)
     scenarios/    # ComparisonTable, ScenarioTabs, RecommendationPanel
   lib/
     engine.ts     # Pure rules engine: WizardInputs → ScenarioResults
