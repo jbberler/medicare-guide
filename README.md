@@ -6,14 +6,14 @@ A guided decision tool that helps people turning 65 choose the right Medicare co
 
 ## Status
 
-`v0.1.4.0` — Phase 2 Track D complete (scenario comparison + memo steps).
+`v0.1.5.0` — Phase 2 Tracks A–D complete (UI primitives, app shell, wizard nav, education components, input steps 2–6, scenario comparison + memo steps).
 
 | Phase | Status |
 |-------|--------|
 | Phase 1 — Foundation (schemas, engine, storage, WizardShell) | ✅ Merged |
 | Phase 2 Track A — UI primitives, app shell, wizard nav | ✅ Merged |
 | Phase 2 Track B — Education components | ✅ Merged |
-| Phase 2 Track C — Input steps 2–6 | 🔜 Pending |
+| Phase 2 Track C — Input steps 2–6 | ✅ PR open |
 | Phase 2 Track D — Output steps 7–8 + scenario components | ✅ PR open |
 | Phase 3 — Welcome screen + integration + E2E | 🔜 Pending |
 | Phase 4 — Polish + accessibility + deploy | 🔜 Pending |
