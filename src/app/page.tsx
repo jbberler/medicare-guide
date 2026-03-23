@@ -1,21 +1,40 @@
-// Step 1 (Welcome screen) is built in Phase 3 — app/page.tsx will be replaced
-// with the Medicare Decision Map hero, optional name field, and CTA.
-// See BUILD_PLAN.md Step 3A.
+"use client";
 
+import { useWizard } from "@/components/wizard/WizardShell";
+import { WelcomeStep } from "@/components/steps/WelcomeStep";
+import { HouseholdStep } from "@/components/steps/HouseholdStep";
+import { InsuranceStep } from "@/components/steps/InsuranceStep";
+import { IncomeStep } from "@/components/steps/IncomeStep";
+import { HealthStep } from "@/components/steps/HealthStep";
+import { TimelineStep } from "@/components/steps/TimelineStep";
+import { ScenariosStep } from "@/components/steps/ScenariosStep";
+import { MemoStep } from "@/components/steps/MemoStep";
+
+/**
+ * Root page — routes to the correct wizard step based on WizardShell state.
+ * All navigation is client-side; there are no URL-based step routes.
+ */
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-white">
-      <div className="max-w-lg text-center space-y-4">
-        <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
-          Medicare Guidepost
-        </h1>
-        <p className="text-gray-500 text-lg">
-          Foundation layer complete. Welcome screen coming in Phase 3.
-        </p>
-        <p className="text-sm text-gray-400">
-          Rates current for 2026 · Last updated March 2026
-        </p>
-      </div>
-    </main>
-  );
+  const { state } = useWizard();
+
+  switch (state.currentStep) {
+    case 1:
+      return <WelcomeStep />;
+    case 2:
+      return <HouseholdStep />;
+    case 3:
+      return <InsuranceStep />;
+    case 4:
+      return <IncomeStep />;
+    case 5:
+      return <HealthStep />;
+    case 6:
+      return <TimelineStep />;
+    case 7:
+      return <ScenariosStep />;
+    case 8:
+      return <MemoStep />;
+    default:
+      return <WelcomeStep />;
+  }
 }
