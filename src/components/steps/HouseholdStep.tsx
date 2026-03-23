@@ -45,7 +45,9 @@ export function HouseholdStep() {
 
   function validate(): boolean {
     const errs: Record<string, string> = {};
-    if (!age || isNaN(parseInt(age, 10))) errs.age = VALIDATION_MSG;
+    const parsedAge = parseInt(age, 10);
+    if (!age || isNaN(parsedAge)) errs.age = VALIDATION_MSG;
+    else if (parsedAge < 62 || parsedAge > 70) errs.age = "Medicare eligibility starts at 65. Enter your age as of this year (62–70).";
     if (!sex) errs.sex = VALIDATION_MSG;
     if (!maritalStatus) errs.marital_status = VALIDATION_MSG;
     if (!selectedState) errs.state = VALIDATION_MSG;

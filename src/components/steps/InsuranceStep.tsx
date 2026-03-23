@@ -72,8 +72,12 @@ export function InsuranceStep() {
     if (isEmployerGroup) {
       setField("employer_holder", employerHolder as EmployerHolder);
       setField("employer_size_20_plus", employerSize20Plus === "true");
-      if (employerPremium !== "") {
-        setField("employer_premium", parseFloat(employerPremium));
+      const premiumTrimmed = employerPremium.trim();
+      if (premiumTrimmed !== "") {
+        const parsedPremium = parseFloat(premiumTrimmed);
+        if (!isNaN(parsedPremium) && parsedPremium >= 0) {
+          setField("employer_premium", parsedPremium);
+        }
       }
     }
 

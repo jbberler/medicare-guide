@@ -16,7 +16,7 @@ export function RuleSummary({ rule, whyItMatters }: RuleSummaryProps) {
       <button
         type="button"
         onClick={() => setExpanded((prev) => !prev)}
-        className="mt-2 text-sm text-blue-700 hover:text-blue-900 font-medium focus:outline-none focus:underline"
+        className="mt-2 text-sm text-blue-700 hover:text-blue-900 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 rounded"
         aria-expanded={expanded}
       >
         Why this matters {expanded ? "▲" : "▼"}

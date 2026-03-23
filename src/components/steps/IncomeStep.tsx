@@ -61,9 +61,10 @@ export function IncomeStep() {
   function handleContinue() {
     if (!validate()) return;
 
-    // Graceful redirect check
+    // Graceful redirect check — only for users who explicitly indicated non-employer coverage.
+    // Guard: coverage_type must be set (not undefined from a skipped step).
     const coverageType = inputs.coverage_type;
-    if (coverageType !== "employer_group" && irmaaBracket === "base") {
+    if (coverageType && coverageType !== "employer_group" && irmaaBracket === "base") {
       setShowRedirectInterstitial(true);
       return;
     }
@@ -186,8 +187,3 @@ export function IncomeStep() {
   );
 }
 
-// Ensure all IRMAA_BRACKETS values are represented — compile-time guard
-// (No runtime code needed; this is a type-level check via the options array)
-type _IrmaaBracketCheck = typeof IRMAA_BRACKETS[number] extends typeof IRMAA_BRACKET_OPTIONS[number]["value"]
-  ? true
-  : false;
