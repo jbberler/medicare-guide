@@ -6,17 +6,18 @@ A guided decision tool that helps people turning 65 choose the right Medicare co
 
 ## Status
 
-`v0.1.6.0` — Phase 3 complete: Welcome screen, full step routing, and Playwright E2E tests. All 8 steps are wired and working end-to-end.
+`v0.1.7.0` — Phase 4 complete: WCAG 2.1 AA accessibility, CSP security headers, P1/P2 engine bug fixes, and full regression test coverage.
 
 | Phase | Status |
 |-------|--------|
-| Phase 1 — Foundation (schemas, engine, storage, WizardShell) | ✅ Merged |
-| Phase 2 Track A — UI primitives, app shell, wizard nav | ✅ Merged |
-| Phase 2 Track B — Education components | ✅ Merged |
-| Phase 2 Track C — Input steps 2–6 | ✅ Merged |
-| Phase 2 Track D — Output steps 7–8 + scenario components | ✅ Merged |
-| Phase 3 — Welcome screen + integration + E2E | ✅ Merged |
-| Phase 4 — Polish + accessibility + deploy | 🔜 Pending |
+| Phase 1 — Foundation (schemas, engine, storage, WizardShell) | ✅ Complete |
+| Phase 2 Track A — UI primitives, app shell, wizard nav | ✅ Complete |
+| Phase 2 Track B — Education components | ✅ Complete |
+| Phase 2 Track C — Input steps 2–6 | ✅ Complete |
+| Phase 2 Track D — Output steps 7–8 + scenario components | ✅ Complete |
+| Phase 3 — Welcome screen + integration + E2E | ✅ Complete |
+| Phase 4 — Accessibility + security headers + bug fixes | ✅ Complete |
+| Phase 4D — Vercel deploy | 🔜 Pending |
 
 ## What it does
 
@@ -40,7 +41,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Running tests
 
 ```bash
-npm test          # Vitest unit tests (65 tests)
+npm test          # Vitest unit tests (81 tests)
 npx playwright test   # Playwright E2E tests (3 scenarios)
 npm run build     # TypeScript + Next.js build check
 ```
