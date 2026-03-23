@@ -90,7 +90,7 @@ Once the schema, engine, storage, and context are in place, these four tracks ar
 ### Track B — Educational Content Components (~15 min CC)
 
 ```
-[ ] 2B1  Education components (components/education/)
+[x] 2B1  Education components (components/education/)
          - RuleSummary.tsx — one-line rule + expandable "Why this matters" block
          - NumberExample.tsx — mini calculation example with realistic 2026 numbers
          - DeadlineStrip.tsx — timeline graphic showing key dates and penalty windows
