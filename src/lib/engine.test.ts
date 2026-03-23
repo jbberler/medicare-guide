@@ -216,7 +216,7 @@ describe("Scenario ranking", () => {
       has_specific_doctors: false,
       state: "WY", // unsupported state → medigap null → B monthly is lower
     });
-    // With unsupported state, medigap is null so B cost is partB + partD only
+    // With unsupported state, medigap is null so B cost is partA + partB + partD only
     // C cost is partB + MA premium — difference should be small
     const bCost = result.scenarios[1].monthlyTotal;
     const cCost = result.scenarios[2].monthlyTotal;
@@ -332,5 +332,98 @@ describe("Graceful redirect", () => {
       employer_premium: 0,
     });
     expect(result.noTargetPersonaRedirect).toBe(false);
+  });
+
+  it("COBRA + base IRMAA → no redirect (P1 fix: COBRA users are highest-risk, never redirect)", () => {
+    const result = computeScenarios({
+      ...baseInputs,
+      coverage_type: "cobra",
+      irmaa_bracket: "base",
+      employer_holder: undefined,
+      employer_size_20_plus: undefined,
+      employer_premium: 0,
+    });
+    expect(result.noTargetPersonaRedirect).toBe(false);
+  });
+
+  it("ACA + base IRMAA → no redirect (P1 fix: ACA users are highest-risk, never redirect)", () => {
+    const result = computeScenarios({
+      ...baseInputs,
+      coverage_type: "aca",
+      irmaa_bracket: "base",
+      employer_holder: undefined,
+      employer_size_20_plus: undefined,
+      employer_premium: 0,
+    });
+    expect(result.noTargetPersonaRedirect).toBe(false);
+  });
+});
+
+// --- Scenario B Part A cost (medigapUnavailable) ---
+
+describe("Scenario B Part A cost when medigap unavailable", () => {
+  it("unsupported state → Scenario B monthlyTotal includes Part A (P1 fix: was previously dropped)", () => {
+    const result = computeScenarios({
+      ...baseInputs,
+      coverage_type: "none",
+      irmaa_bracket: "base",
+      state: "AK", // AK not in curated Medigap dataset → medigapUnavailable = true
+      employer_holder: undefined,
+      employer_size_20_plus: undefined,
+      employer_premium: 0,
+      retiring_soon: true,
+    });
+    const b = result.scenarios[1];
+    expect(b.medigapUnavailable).toBe(true);
+    // monthlyTotal must equal partA + partB + partD (not just partB + partD)
+    expect(b.monthlyTotal).toBe(b.partAMonthly + b.partBMonthly + b.partDMonthly);
+    expect(b.annualTotal).toBe((b.partAMonthly + b.partBMonthly + b.partDMonthly) * 12);
+  });
+});
+
+// --- IRMAA impact labels ---
+
+describe("IRMAA impact labels", () => {
+  it("base bracket → irmaaImpact starts with 'Standard Part B' not 'IRMAA' (P2 fix: Scenario B)", () => {
+    const result = computeScenarios({
+      ...baseInputs,
+      coverage_type: "none",
+      irmaa_bracket: "base",
+      employer_holder: undefined,
+      employer_size_20_plus: undefined,
+      employer_premium: 0,
+      retiring_soon: true,
+    });
+    expect(result.scenarios[1].irmaaImpact).toContain("Standard Part B");
+    expect(result.scenarios[1].irmaaImpact).toContain("no IRMAA surcharge");
+    expect(result.scenarios[1].irmaaImpact).not.toMatch(/^IRMAA/);
+  });
+
+  it("base bracket → irmaaImpact starts with 'Standard Part B' not 'IRMAA' (P2 fix: Scenario C)", () => {
+    const result = computeScenarios({
+      ...baseInputs,
+      coverage_type: "none",
+      irmaa_bracket: "base",
+      employer_holder: undefined,
+      employer_size_20_plus: undefined,
+      employer_premium: 0,
+      retiring_soon: true,
+    });
+    expect(result.scenarios[2].irmaaImpact).toContain("Standard Part B");
+    expect(result.scenarios[2].irmaaImpact).toContain("no IRMAA surcharge");
+    expect(result.scenarios[2].irmaaImpact).not.toMatch(/^IRMAA/);
+  });
+
+  it("above-base bracket → irmaaImpact starts with 'IRMAA' (Scenario B)", () => {
+    const result = computeScenarios({
+      ...baseInputs,
+      coverage_type: "none",
+      irmaa_bracket: "tier2",
+      employer_holder: undefined,
+      employer_size_20_plus: undefined,
+      employer_premium: 0,
+      retiring_soon: true,
+    });
+    expect(result.scenarios[1].irmaaImpact).toMatch(/^IRMAA/);
   });
 });

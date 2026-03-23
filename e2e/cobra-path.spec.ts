@@ -41,7 +41,7 @@ test("COBRA path — penalty warning shown, Scenario A not recommended, memo has
   await expect(page.getByLabel(/income bracket/i)).toBeVisible();
   // Tier 1 avoids the graceful-redirect interstitial (redirect only for non-employer + base)
   await page.getByLabel(/income bracket/i).selectOption("tier1");
-  await page.locator('input[name="retiring_within_12_months"][value="true"]').check();
+  await page.locator('input[name="retiring_soon_income"][value="true"]').check();
   await page.getByRole("button", { name: "Continue" }).click();
 
   // ── Step 5: Your Health ──────────────────────────────────────────────────────

@@ -37,8 +37,8 @@ test("happy path — employer + high income → Scenario A recommended → memo 
   // ── Step 4: Your Income ──────────────────────────────────────────────────────
   await expect(page.getByLabel(/income bracket/i)).toBeVisible();
   await page.getByLabel(/income bracket/i).selectOption("tier2");
-  // retiring_within_12_months = false
-  await page.locator('input[name="retiring_within_12_months"][value="false"]').check();
+  // retiring_soon = false (IncomeStep radio name is "retiring_soon_income")
+  await page.locator('input[name="retiring_soon_income"][value="false"]').check();
   await page.getByRole("button", { name: "Continue" }).click();
 
   // ── Step 5: Your Health ──────────────────────────────────────────────────────

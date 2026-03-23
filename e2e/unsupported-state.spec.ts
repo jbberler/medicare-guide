@@ -40,7 +40,7 @@ test("unsupported state — Scenario B shows SHIP fallback, memo includes caveat
   // ── Step 4: Your Income ──────────────────────────────────────────────────────
   await expect(page.getByLabel(/income bracket/i)).toBeVisible();
   await page.getByLabel(/income bracket/i).selectOption("tier1");
-  await page.locator('input[name="retiring_within_12_months"][value="false"]').check();
+  await page.locator('input[name="retiring_soon_income"][value="false"]').check();
   await page.getByRole("button", { name: "Continue" }).click();
 
   // ── Step 5: Your Health ──────────────────────────────────────────────────────
