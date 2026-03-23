@@ -185,7 +185,7 @@ Blocked on rules engine (Phase 1C) and Medigap data. Can start Step 8 immediatel
 ## Phase 3 — Welcome Screen & Integration (~20 min CC)
 
 ```
-[ ] 3A  Welcome screen (app/page.tsx)
+[x] 3A  Welcome screen (app/page.tsx)
         - "Medicare Decision Map" hero visual (SVG showing Current Coverage → Age → Income → Recommendation)
         - Optional first-name field: "What should we call you? (optional — stays in your browser)"
         - CTA: "Build my decision memo →"
@@ -193,7 +193,7 @@ Blocked on rules engine (Phase 1C) and Medigap data. Can start Step 8 immediatel
         - Return-visit banner: "Welcome back — pick up where you left off" (from WizardShell)
         Depends on: 2A1, 2A2, WizardContext
 
-[ ] 3B  End-to-end integration pass
+[x] 3B  End-to-end integration pass
         - Wire all steps into WizardShell routing
         - Verify back/forward navigation + conditional invalidation across all steps
         - Verify localStorage persistence across browser refresh
@@ -201,7 +201,7 @@ Blocked on rules engine (Phase 1C) and Medigap data. Can start Step 8 immediatel
         - Verify age gate interstitial + persistent banner
         Depends on: all tracks complete
 
-[ ] 3C  E2E tests (e2e/)
+[x] 3C  E2E tests (e2e/)
         - Happy path (employer + high income → Scenario A recommended → memo prints)
         - COBRA path (penalty warning → Scenario A never recommended → memo has Part B action item)
         - Unsupported state (SHIP fallback in Scenario B card → memo includes caveat)
