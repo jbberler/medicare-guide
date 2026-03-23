@@ -85,3 +85,61 @@
 **Effort:** ~2-3 hours human research. Partially compressible with AI (can search for published rate comparisons).
 
 **Depends on:** Nothing. Can start immediately. Must complete before Step 7 scenarios can be built and tested.
+
+---
+
+## Engine: Scenario B Part A Cost Undercount
+
+**What:** When `medigapUnavailable` is true, `engine.ts` lines 226-231 compute Scenario B `monthlyTotal` without adding `partAMonthly`. Users without 40 work credits pay up to $518/mo for Part A — this is silently dropped from the B cost estimate.
+
+**Fix:** Include `partAMonthly` in the Scenario B `monthlyTotal` regardless of `medigapUnavailable`. The Medigap premium is what's unavailable, not the Part A premium.
+
+**Impact:** Scenario B can appear up to $518/mo cheaper than reality for users without 40 work credits. Could mislead users toward B.
+
+**Effort:** 1-line fix in engine.ts
+
+**Priority:** P1 (fix before public launch)
+
+**Noticed by:** adversarial review on jbberler/phase2-track-d (2026-03-23)
+
+---
+
+## Engine: Retirement Boolean OR-Gate Lock-In
+
+**What:** `engine.ts:143` uses `retiring_soon || retiring_within_12_months` as an OR-gate with no clearing dependency between the two fields. If both are `true` (e.g., user changed answers), the recommendation can lock incorrectly.
+
+**Fix:** Mutually exclude the fields in the schema — if `retiring_within_12_months` is true, `retiring_soon` should be forced false (or vice versa).
+
+**Impact:** Edge case: users who revisited Step 3 and selected different answers could get conflicting recommendation logic.
+
+**Effort:** Zod `superRefine` + WizardShell step reset logic, ~20 min CC
+
+**Priority:** P2
+
+**Noticed by:** adversarial review on jbberler/phase2-track-d (2026-03-23)
+
+---
+
+## Engine: IRMAA Base Bracket Label Mismatch
+
+**What:** `engine.ts:241` applies "Full IRMAA impact" label at the base bracket, which describes the standard Part B premium as an IRMAA surcharge. The base bracket has no IRMAA surcharge — only brackets above base do.
+
+**Fix:** Map base bracket to "No IRMAA surcharge" and only use "IRMAA impact" language for brackets above base.
+
+**Impact:** Misleading label for most users (base bracket is the majority). Could cause unnecessary alarm.
+
+**Effort:** Switch/case update in engine.ts, ~5 min CC
+
+**Priority:** P2
+
+**Noticed by:** adversarial review on jbberler/phase2-track-d (2026-03-23)
+
+---
+
+## Completed
+
+### Blocking: Medigap Data Curation
+
+**Completed:** v0.1.1.0 (2026-03-23)
+
+Medigap Plan G median premiums compiled for initial state set, bucketed by age band (65, 66-70, 71-75) × sex (M/F), written to `src/data/medigap-2026.json`. Step 7 (ScenariosStep) is now built and functional against this data.
