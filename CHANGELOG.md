@@ -2,6 +2,22 @@
 
 All notable changes to Medicare Guidepost will be documented in this file.
 
+## [0.1.6.0] - 2026-03-23
+
+### Added
+- Welcome screen (`src/components/steps/WelcomeStep.tsx`):
+  - Medicare Decision Map SVG hero — 4-node flow: Current Coverage → Your Age → Your Income → Your Recommendation
+  - Optional first-name field (persists to memo header via `WizardContext`)
+  - Return-visit resume banner: "Welcome back — your information is saved locally" with Continue / Start over actions
+  - Private browsing notice via `state.isPrivateBrowsing`
+  - Expectations panel: 15–20 min, personalized output, no data leaves browser
+- Step routing (`src/app/page.tsx`): client component replacing placeholder; maps `state.currentStep` 1–8 to the correct step component (WelcomeStep → MemoStep); `default` case falls back to WelcomeStep
+- Playwright E2E tests (`e2e/`, `playwright.config.ts`):
+  - `happy-path.spec.ts` — employer group + Tier 2 income → Scenario A recommended → memo print button present
+  - `cobra-path.spec.ts` — COBRA coverage + Tier 1 income → COBRA penalty warning shown → Scenario A NOT recommended → "Enroll in Part B immediately" in printable memo DOM
+  - `unsupported-state.spec.ts` — Alaska (AK, not in Medigap dataset) → Scenario B shows shiphelp.org SHIP fallback → "Medigap estimate not available" in printable memo DOM
+  - All tests use attribute-based selectors (`input[name][value]`) for radio buttons to avoid ambiguity; `toHaveCount(1)` for print-only DOM assertions
+
 ## [0.1.5.0] - 2026-03-23
 
 ### Added

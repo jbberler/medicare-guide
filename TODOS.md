@@ -146,7 +146,7 @@
 
 **Effort:** ~15 min CC
 
-**Priority:** P2 (no user-visible bug until integration; fix in Phase 3)
+**Priority:** P2 (no user-visible bug until integration; Phase 3 complete without this fix — defer to Phase 4)
 
 **Noticed by:** /review on jbberler/oslo-phase2-track-c (2026-03-23)
 
