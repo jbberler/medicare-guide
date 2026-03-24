@@ -34,7 +34,9 @@ export function WizardAppShell({ children }: WizardAppShellProps) {
 
         {/* Main content pane */}
         <main className="flex-1 min-w-0 overflow-y-auto" id="wizard-main">
-          {children}
+          <div className="max-w-2xl mx-auto px-8 py-8">
+            {children}
+          </div>
         </main>
       </div>
     </>
