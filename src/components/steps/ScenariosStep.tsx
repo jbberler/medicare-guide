@@ -97,7 +97,7 @@ export function ScenariosStep() {
   const { results } = loadState;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20 md:pb-0">
       <div>
         <h2 className="text-2xl font-semibold text-gray-900">Your scenarios</h2>
         <p className="text-gray-600 mt-1">
@@ -107,7 +107,7 @@ export function ScenariosStep() {
       </div>
 
       {/* Desktop: comparison table; mobile: tabbed view */}
-      <div className="hidden md:block">
+      <div className="hidden md:block -mx-8">
         <ComparisonTable results={results} />
       </div>
       <div className="md:hidden">

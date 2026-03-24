@@ -152,8 +152,8 @@ export function WelcomeStep() {
         </Banner>
       )}
 
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
-        <div className="w-full max-w-2xl space-y-10">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 md:py-12">
+        <div className="w-full max-w-2xl space-y-6 md:space-y-10">
           {/* Header */}
           <div className="text-center space-y-3">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">
