@@ -2,6 +2,14 @@
 
 All notable changes to Medicare Guidepost will be documented in this file.
 
+## [0.1.7.1] - 2026-03-23
+
+### Fixed
+- **Mobile: whitespace gap above recommendation panel** (`ScenarioTabs.tsx`): Removed `pb-24` that was creating a large blank space between the tabbed scenario detail and the COBRA/ACA warning box
+- **Mobile: nav buttons covered by sticky cost bar** (`ScenariosStep.tsx`): Added `pb-20 md:pb-0` to the step container so Back/Continue buttons scroll clear of the fixed bottom bar
+- **Desktop: comparison table too narrow** (`ScenariosStep.tsx`): Added `-mx-8` to break the table out of the container's horizontal padding, gaining ~64px of width
+- **Welcome page: excessive vertical spacing on mobile** (`WelcomeStep.tsx`): Reduced page padding and section gaps on mobile (`py-6`/`space-y-6`) while keeping desktop layout unchanged (`md:py-12`/`md:space-y-10`)
+
 ## [0.1.7.0] - 2026-03-23
 
 ### Added
