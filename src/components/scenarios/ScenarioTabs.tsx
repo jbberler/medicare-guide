@@ -49,8 +49,7 @@ export function ScenarioTabs({ results }: Props) {
   const active = scenarios.find((s) => s.id === activeTab) ?? scenarios[0];
 
   return (
-    // Extra bottom padding so content isn't obscured by the sticky cost bar
-    <div className="flex flex-col pb-24">
+    <div className="flex flex-col">
       {/* Tab bar */}
       <div
         className="flex border-b border-gray-200"
